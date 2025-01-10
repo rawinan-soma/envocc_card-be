@@ -7,11 +7,17 @@ MYSQL_PASSWORD:
 2. create .env ใน Folder src ประกอบไปด้วยข้อมูลจากข้างบน docker.env
 
 DATABASE_URL="mysql://root:MYSQL_ROOT_PASSWORD@envcard-mysql:3306/MYSQL_DATABASE"
+
 MYSQL_HOST=envcard-mysql
+
 MYSQL_PORT=3306
+
 MYSQL_USER=MYSQL_USER
+
 MYSQL_PASSWORD=MYSQL_PASSWORD
+
 MYSQL_DB=MYSQL_DATABASE
+
 SESSION_SECRET=  อะไรก้อได้
 
 4. start service โดย run ใน terminal
