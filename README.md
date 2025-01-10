@@ -33,7 +33,7 @@ docker compose --profile dev-fresh up -d
 docker compose --profile dev-update up -d
 
 # start production
-docker compose --profile fresh up -d
+docker compose --profile prod-fresh up -d
 
 # start production ครั้งหลัง ไม่ต้อง seed
 docker compose --profile prod-update up -d
