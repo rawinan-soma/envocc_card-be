@@ -1,10 +1,14 @@
 1. create docker.env ประกอบไปด้วย
+
 MYSQL_ROOT_PASSWORD:
+
 MYSQL_DATABASE:
+
 MYSQL_USER:
+
 MYSQL_PASSWORD:
 
-2. create .env ใน Folder src ประกอบไปด้วยข้อมูลจากข้างบน docker.env
+3. create .env ใน Folder src ประกอบไปด้วยข้อมูลจากข้างบน docker.env
 
 DATABASE_URL="mysql://root:MYSQL_ROOT_PASSWORD@envcard-mysql:3306/MYSQL_DATABASE"
 
