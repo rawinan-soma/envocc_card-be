@@ -1,3 +1,5 @@
+# FOR TESTING ONLY!! #
+
 1. create docker.env ประกอบไปด้วย
 
 MYSQL_ROOT_PASSWORD:
