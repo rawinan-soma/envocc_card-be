@@ -29,7 +29,7 @@ SESSION_SECRET=  อะไรก้อได้
 # start ครั้งแรก ต้อง migrate + seeding เสมอ
 docker compose --profile dev-fresh up -d
 
-# start ครั้งหลัง ไม่ต้อง seed
+# start ครั้งหลัง หรือ update code ใหม่ ไม่ต้อง seed
 docker compose --profile dev-update up -d
 
 # start production
