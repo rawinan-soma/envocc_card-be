@@ -83,7 +83,6 @@ export class RequestsService {
     }
   }
 
-  // TODO: Create request status = 0
   async createNewRequest(data: CreateNewRequestDto) {
     try {
       const user = await this.getCurrentStatus(data.user);
