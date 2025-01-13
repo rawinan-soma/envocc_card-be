@@ -93,6 +93,8 @@ export class RequestsService {
         );
       }
 
+      data.request_status = 0;
+
       await this.prismaService.requests.create({ data: data });
     } catch (error: any) {
       this.logger.error('ERROR: createNewRequest');
