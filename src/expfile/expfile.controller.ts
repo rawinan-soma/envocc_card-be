@@ -30,6 +30,12 @@ export class ExpfileController {
   )
   @ApiBody({
     type: FileUploadDto,
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+      },
+    },
   })
   @ApiConsumes('multipart/form-data')
   async uploadEnvCardFile(

@@ -1,8 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateGovcardDto } from './dto/create-govcard.dto';
-import { UpdateGovcardDto } from './dto/update-govcard.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
+import * as fs from 'fs';
 
 @Injectable()
 export class GovcardService {
@@ -30,9 +30,31 @@ export class GovcardService {
     }
   }
 
-  // async deleteGovCard(gov_card_file_id: number) {
-  //   try {
-  //     const selectedFile = await
-  //   }
-  // }
+  async deleteGovCard(user: number) {
+    try {
+      const selectedFile = await this.getGovCardfile(user);
+
+      fs.unlinkSync(selectedFile.file_name);
+
+      return await this.prismaService.gov_card_files.delete({
+        where: { gov_card_file_id: selectedFile.gov_card_file_id },
+      });
+    } catch (error: any) {
+      this.logger.error('ERROR: deleteGovCard');
+      this.logger.error(error);
+
+      serviceErrorHandler(error);
+    }
+  }
+
+  async creatGovCard(data: CreateGovcardDto) {
+    try {
+      return await this.prismaService.gov_card_files.create({ data: data });
+    } catch (error: any) {
+      this.logger.error('ERROR: createGovCard');
+      this.logger.error(error);
+
+      serviceErrorHandler(error);
+    }
+  }
 }
