@@ -10,6 +10,18 @@ export class ExperiencesService {
   private readonly logger = new Logger(ExperiencesService.name);
   constructor(private readonly prismaService: PrismaService) {}
 
+  private async calculateExpYears(ldate: Date, fdate: Date) {
+    let yeardiff = ldate.getFullYear() - fdate.getFullYear();
+    if (
+      ldate.getMonth() < fdate.getMonth() ||
+      (ldate.getMonth() === fdate.getMonth() && ldate.getDay() < fdate.getDay())
+    ) {
+      yeardiff--;
+    }
+
+    return yeardiff;
+  }
+
   async getOneUserExps(user_id: number) {
     try {
       const exps = await this.prismaService.experiences.findMany({
@@ -28,6 +40,10 @@ export class ExperiencesService {
 
   async addExps(data: CreateExperienceDto) {
     try {
+      data.exp_years = await this.calculateExpYears(
+        data.exp_ldate,
+        data.exp_fdate,
+      );
       return await this.prismaService.experiences.create({
         data: data,
       });
@@ -85,6 +101,25 @@ export class ExperiencesService {
       } else {
         serviceErrorHandler(error);
       }
+    }
+  }
+
+  async getAllExpByInstitution(instituion_id: number) {
+    try {
+      const exps = await this.prismaService.experiences.groupBy({
+        by: ['user'],
+        where: { users: { institution: instituion_id } },
+        _sum: {
+          exp_years: true,
+        },
+      });
+
+      return exps;
+    } catch (error: any) {
+      this.logger.error('ERROR: getAllExp');
+      this.logger.error(error);
+
+      serviceErrorHandler(error);
     }
   }
 }
