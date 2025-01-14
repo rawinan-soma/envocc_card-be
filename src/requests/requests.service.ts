@@ -101,4 +101,6 @@ export class RequestsService {
       serviceErrorHandler(error);
     }
   }
+
+  // TODO: Delete request status = 0 by ID
 }

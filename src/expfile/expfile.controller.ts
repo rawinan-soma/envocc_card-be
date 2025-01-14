@@ -16,7 +16,7 @@ import { CreateExpfileDto } from './dto/create-expfile.dto';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 import { diskStorage } from 'multer';
 
-@Controller('expfile')
+@Controller('expFiles')
 export class ExpfileController {
   constructor(private readonly expfileService: ExpfileService) {}
 

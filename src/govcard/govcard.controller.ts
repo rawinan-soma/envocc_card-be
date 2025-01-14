@@ -13,7 +13,7 @@ import { diskStorage } from 'multer';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
-@Controller('govcard')
+@Controller('govCards')
 export class GovcardController {
   constructor(private readonly govcardService: GovcardService) {}
 
@@ -41,6 +41,6 @@ export class GovcardController {
   ) {
     // data.filename = file.originalname;
 
-    return this.govcardService.creatGovCard(data);
+    return this.govcardService.createGovCard(data);
   }
 }

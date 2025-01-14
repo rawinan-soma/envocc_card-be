@@ -47,7 +47,7 @@ export class GovcardService {
     }
   }
 
-  async creatGovCard(data: CreateGovcardDto) {
+  async createGovCard(data: CreateGovcardDto) {
     try {
       return await this.prismaService.gov_card_files.create({ data: data });
     } catch (error: any) {
