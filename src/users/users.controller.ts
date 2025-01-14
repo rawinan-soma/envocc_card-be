@@ -83,8 +83,13 @@ export class UsersController {
     return this.usersService.updateUser(username, updatedUser);
   }
 
-  @Delete(':username')
-  async deleteUser(@Param('username') username: string) {
-    return this.usersService.deleteUser(username);
+  @Delete(':user_id')
+  async deleteUser(@Param('user_id') user_id: number) {
+    return this.usersService.deleteUser(user_id);
+  }
+
+  @Patch('validate/:user_id')
+  async validateUser(@Param('user_id') user_id: number) {
+    return this.usersService.validateUser(user_id);
   }
 }

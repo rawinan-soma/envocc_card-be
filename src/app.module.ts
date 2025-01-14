@@ -21,6 +21,8 @@ import { PhotosModule } from './photos/photos.module';
 
 import * as Joi from 'joi';
 import { PrismaModule } from './prisma/prisma.module';
+import { PositionsModule } from './positions/positions.module';
+import { PositionLvlsModule } from './position-lvls/position-lvls.module';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { PrismaModule } from './prisma/prisma.module';
     GovcardModule,
     PhotosModule,
     PrismaModule,
+    PositionsModule,
+    PositionLvlsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

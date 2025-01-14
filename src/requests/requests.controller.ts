@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Req, Body, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Req,
+  Body,
+  Post,
+  Delete,
+} from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import LogInRequest from 'src/admin-auth/log-in-request.interface';
 import { createStatusDto } from './dto/create-status.dto';
@@ -32,4 +40,7 @@ export class RequestsController {
   async createNewRequest(@Body() newRequest: CreateNewRequestDto) {
     return this.requestsService.createNewRequest(newRequest);
   }
+
+  @Delete('users/:user_id')
+  async deleteRequestByUser(@Param('user_id') user_id: number) {}
 }

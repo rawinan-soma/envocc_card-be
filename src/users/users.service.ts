@@ -192,10 +192,6 @@ export class UsersService {
         },
       });
 
-      if (!user) {
-        return new NotFoundException('This user did not existed');
-      }
-
       return user;
     } catch (error: any) {
       this.logger.error('ERROR: getPrintUser');
@@ -347,18 +343,18 @@ export class UsersService {
     }
   }
 
-  async deleteUser(username: string) {
+  async deleteUser(user_id: number) {
     try {
       const existedUser = await this.prismaService.users.findUnique({
-        where: { username: username },
+        where: { user_id: user_id },
       });
 
       if (!existedUser) {
-        throw new NotFoundException(`User ${username} not found`);
+        throw new NotFoundException(`User ${user_id} not found`);
       }
 
       return await this.prismaService.users.delete({
-        where: { username: username },
+        where: { user_id: user_id },
       });
     } catch (error: any) {
       this.logger.error('ERROR: updateUser');
@@ -367,22 +363,22 @@ export class UsersService {
     }
   }
 
-  async validateUser(username: string) {
+  async validateUser(user_id: number) {
     try {
       const existedUser = await this.prismaService.users.findUnique({
-        where: { username: username },
+        where: { user_id: user_id },
       });
 
       if (!existedUser) {
-        throw new NotFoundException(`User ${username} not found`);
+        throw new NotFoundException(`User ${user_id} not found`);
       }
 
       if (existedUser.is_validate === true) {
-        throw new BadRequestException(`User ${username} already activated`);
+        throw new BadRequestException(`User ${user_id} already activated`);
       }
 
       return await this.prismaService.users.update({
-        where: { username: username },
+        where: { user_id: user_id },
         data: { is_validate: true },
       });
     } catch (error: any) {

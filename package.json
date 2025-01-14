@@ -22,7 +22,8 @@
     "start:migrate:seed:prod": "cd ./src && prisma migrate deploy && npm run seed && npm run start:prod",
     "start:migrate:prod": "cd ./src && prisma migrate deploy &&  npm run start:prod",
     "start:migrate:seed:dev": "cd ./src && prisma migrate deploy && npm run seed && npm run start",
-    "start:migrate:dev": "cd ./src && prisma migrate deploy && npm run start"
+    "start:migrate:dev": "cd ./src && prisma migrate deploy && npm run start",
+    "start:migrate:seed:dev:watch": "cd ./src && prisma migrate deploy && npm run seed && npm run start:dev"
   },
   "dependencies": {
     "@nestjs/cli": "^10.0.0",
