@@ -4,8 +4,8 @@ import { IsNumber, IsString } from 'class-validator';
 export class CreateExpsfileDto {
   @IsNumber()
   @Type(() => Number)
-  admin: number;
+  admin?: number;
 
   @IsString()
-  exp_file: string;
+  exp_file?: string;
 }

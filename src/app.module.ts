@@ -23,6 +23,7 @@ import * as Joi from 'joi';
 import { PrismaModule } from './prisma/prisma.module';
 import { PositionsModule } from './positions/positions.module';
 import { PositionLvlsModule } from './position-lvls/position-lvls.module';
+import { SignPersonModule } from './sign-person/sign-person.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { PositionLvlsModule } from './position-lvls/position-lvls.module';
     PrismaModule,
     PositionsModule,
     PositionLvlsModule,
+    SignPersonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

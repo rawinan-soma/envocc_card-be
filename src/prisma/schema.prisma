@@ -260,7 +260,7 @@ model seals {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model sign_persons {
   sign_person_id     Int          @id @unique(map: "sign_person_id")
-  sing_person_pname  String?      @db.VarChar(100)
+  sign_person_pname  String?      @db.VarChar(100)
   sign_person_name   String?      @db.VarChar(255)
   sign_person_lname  String?      @db.VarChar(255)
   signature_pix      String?      @db.VarChar(255)
