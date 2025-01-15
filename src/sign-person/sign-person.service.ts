@@ -1,6 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { CreateSignPersonDto } from './dto/create-sign-person.dto';
-import { UpdateSignPersonDto } from './dto/update-sign-person.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 
@@ -12,15 +11,7 @@ export class SignPersonService {
   async getAllSignPersons() {
     try {
       const signPersons = await this.prisma.sign_persons.findMany({
-        select: {
-          department: true,
-          sing_person_pname: true,
-          sign_person_name: true,
-          sign_person_lname: true,
-          position: true,
-          signature_pix: true,
-          sing_person_active: true,
-        },
+        omit: { sign_person_id: true },
       });
 
       return signPersons;
@@ -40,6 +31,19 @@ export class SignPersonService {
           sign_person_lname: data.sign_person_lname,
         },
       });
-    } catch (error: any) {}
+
+      if (signPerson) {
+        throw new BadRequestException('This Sign person already exist');
+      }
+
+      return await this.prisma.sign_persons.create({
+        data: { sign_person_active: true, ...data },
+      });
+    } catch (error: any) {
+      this.logger.error('ERROR: addSignPerson');
+      this.logger.error(error);
+
+      serviceErrorHandler(error);
+    }
   }
 }

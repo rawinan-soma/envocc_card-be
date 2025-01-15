@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { SignPersonService } from './sign-person.service';
 import { CreateSignPersonDto } from './dto/create-sign-person.dto';
-import { UpdateSignPersonDto } from './dto/update-sign-person.dto';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { FileUploadDto } from 'src/common/file-upload.dto';
 
 @Controller('sign-person')
 export class SignPersonController {
   constructor(private readonly signPersonService: SignPersonService) {}
 
-  @Post()
-  create(@Body() createSignPersonDto: CreateSignPersonDto) {
-    return this.signPersonService.create(createSignPersonDto);
-  }
-
   @Get()
-  findAll() {
-    return this.signPersonService.findAll();
+  async getAllSignPerson() {
+    return await this.signPersonService.getAllSignPersons();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.signPersonService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSignPersonDto: UpdateSignPersonDto) {
-    return this.signPersonService.update(+id, updateSignPersonDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.signPersonService.remove(+id);
+  @Post()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './assets',
+      }),
+    }),
+  )
+  @ApiBody({
+    type: FileUploadDto,
+  })
+  @ApiConsumes('multipart/form-data')
+  async addSignPerson(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() data: CreateSignPersonDto,
+  ) {
+    return this.signPersonService.addSignPerson(data);
   }
 }

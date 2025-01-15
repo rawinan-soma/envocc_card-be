@@ -259,14 +259,14 @@ model seals {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model sign_persons {
-  sign_person_id     Int          @id @unique(map: "sign_person_id")
+  sign_person_id     Int          @id @unique(map: "sign_person_id") @default(autoincrement())
   sign_person_pname  String?      @db.VarChar(100)
   sign_person_name   String?      @db.VarChar(255)
   sign_person_lname  String?      @db.VarChar(255)
   signature_pix      String?      @db.VarChar(255)
-  department         Int?
+  department         Int
   position           String?      @db.VarChar(255)
-  sing_person_active String?      @db.VarChar(100)
+  sign_person_active Boolean
   departments        departments? @relation(fields: [department], references: [department_id], onDelete: NoAction, onUpdate: NoAction, map: "sign_persons_ibfk_1")
 
   @@index([department], map: "department")
