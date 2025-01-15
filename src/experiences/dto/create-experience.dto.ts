@@ -26,4 +26,7 @@ export class CreateExperienceDto {
 
   @IsString()
   exp_work: string;
+
+  @IsNumber()
+  exp_years: number;
 }

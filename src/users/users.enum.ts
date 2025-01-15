@@ -1,5 +1,3 @@
-// BOOKMARKS: All user data enums
-
 export enum BloodGroup {
   A = 'A',
   B = 'B',

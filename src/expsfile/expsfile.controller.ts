@@ -7,6 +7,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Req,
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { ExpsfileService } from './expsfile.service';
@@ -15,8 +16,9 @@ import { CreateExpsfileDto } from './dto/create-expsfile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { FileUploadDto } from 'src/common/file-upload.dto';
+import LogInRequest from 'src/admin-auth/log-in-request.interface';
 
-@Controller('expsfile')
+@Controller('expsFile')
 export class ExpsfileController {
   constructor(private readonly expsfileService: ExpsfileService) {}
 
@@ -33,10 +35,13 @@ export class ExpsfileController {
   })
   @ApiConsumes('multipart/form-data')
   async uploadExpsFile(
-    @Body() data: CreateExpsfileDto,
+    @Req() req: LogInRequest,
+    @Body()
+    data: CreateExpsfileDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
     data.exp_file = file.originalname;
+    data.admin = req.user.admin_id;
 
     return this.expsfileService.createExpsFile(data);
   }
