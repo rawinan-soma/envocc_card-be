@@ -14,7 +14,7 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
-import { AdminAuthGuard } from 'src/common/admin-auth-guard.guard';
+
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 import { UserRole } from 'src/common/user-roles';
 import { Roles } from '../common/user-roles-decorator';
