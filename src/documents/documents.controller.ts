@@ -45,6 +45,7 @@ export class DocumentsController {
     @Body() data: CreateDocumentDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    // TODO: Apply for all file type
     data.doc_name = Math.floor(100000 + Math.random() * 900000).toString();
     return this.documentsService.createDocument(data);
   }

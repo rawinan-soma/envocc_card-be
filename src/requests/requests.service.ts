@@ -102,5 +102,22 @@ export class RequestsService {
     }
   }
 
-  // TODO: Delete request status = 0 by ID
+  async deleteRequestByID(user_id: number) {
+    try {
+      const request = await this.getCurrentStatus(user_id);
+      const isInitiate = request.request_status !== 0;
+      if (!request || isInitiate) {
+        throw new BadRequestException('Bad request by user');
+      }
+
+      await this.prismaService.requests.delete({
+        where: { req_id: request.req_id },
+      });
+    } catch (error: any) {
+      this.logger.error('ERROR: deleteRequest');
+      this.logger.error(error);
+
+      serviceErrorHandler(error);
+    }
+  }
 }
