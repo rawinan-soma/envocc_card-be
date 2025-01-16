@@ -7,12 +7,4 @@ export class CreateDocumentDto {
   doc_type: number;
 
   doc_name: string;
-
-  doc_file: string;
-
-  @ApiProperty({
-    type: 'string',
-    format: 'binary',
-  })
-  file: any;
 }

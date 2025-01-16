@@ -3,6 +3,7 @@ import { CreateExpsfileDto } from './dto/create-expsfile.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import * as fs from 'fs';
+import { randomFilename } from 'src/common/randomFilename';
 
 @Injectable()
 export class ExpsfileService {
@@ -32,7 +33,34 @@ export class ExpsfileService {
 
   async createExpsFile(data: CreateExpsfileDto) {
     try {
-      return await this.prismaService.experiences_files.create({ data: data });
+      const existingFile = await this.prismaService.experiences_files.findFirst(
+        {
+          where: { exp_file: data.exp_file },
+        },
+      );
+
+      if (!existingFile) {
+        return await this.prismaService.experiences_files.create({
+          data: data,
+        });
+      } else {
+        let isFileNameUnique: boolean = false;
+        while (!isFileNameUnique) {
+          data.exp_file = randomFilename();
+
+          const existingFile =
+            await this.prismaService.experiences_files.findFirst({
+              where: { exp_file: data.exp_file },
+            });
+
+          if (!existingFile) {
+            isFileNameUnique = true;
+          }
+        }
+        return await this.prismaService.experiences_files.create({
+          data: data,
+        });
+      }
     } catch (error: any) {
       this.logger.error('ERROR: createExpsFile');
       this.logger.error(error);

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateEnvcardDto } from './dto/create-envcard.dto';
 import * as fs from 'fs';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
+import { randomFilename } from 'src/common/randomFilename';
 
 @Injectable()
 export class EnvcardService {
@@ -48,7 +49,35 @@ export class EnvcardService {
 
   async createCardFile(data: CreateEnvcardDto) {
     try {
-      return await this.prismaService.envocc_card_files.create({ data: data });
+      const existingFile = await this.prismaService.envocc_card_files.findFirst(
+        {
+          where: { file_card_name: data.file_card_name },
+        },
+      );
+
+      if (!existingFile) {
+        return await this.prismaService.envocc_card_files.create({
+          data: data,
+        });
+      } else {
+        let isFileNameUnique: boolean = false;
+        while (!isFileNameUnique) {
+          data.file_card_name = randomFilename();
+
+          const existingFile =
+            await this.prismaService.envocc_card_files.findFirst({
+              where: { file_card_name: data.file_card_name },
+            });
+
+          if (!existingFile) {
+            isFileNameUnique = true;
+          }
+        }
+
+        return await this.prismaService.envocc_card_files.create({
+          data: data,
+        });
+      }
     } catch (error: any) {
       this.logger.error('ERROR: createCardFile');
       this.logger.error(error);

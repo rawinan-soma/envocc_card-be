@@ -17,6 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 import LogInRequest from 'src/admin-auth/log-in-request.interface';
+import { randomFilename } from 'src/common/randomFilename';
 
 @Controller('expsFile')
 export class ExpsfileController {
@@ -36,11 +37,15 @@ export class ExpsfileController {
   @ApiConsumes('multipart/form-data')
   async uploadExpsFile(
     @Req() req: LogInRequest,
+    // FIXME: delete in prod
     @Body()
     data: CreateExpsfileDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    data.exp_file = file.originalname;
+    // FIXME: use after allocate authen guard
+    // let data: CreateExpsfileDto;
+
+    data.exp_file = randomFilename();
     data.admin = req.user.admin_id;
 
     return this.expsfileService.createExpsFile(data);

@@ -14,6 +14,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { randomFilename } from 'src/common/randomFilename';
+import LogInRequest from 'src/user-auth/log-in-request.interface';
 
 @Controller('envcard')
 export class EnvcardController {
@@ -34,8 +36,12 @@ export class EnvcardController {
   async uploadEnvCardFile(
     @Body() data: CreateEnvcardDto,
     @UploadedFile() file: Express.Multer.File,
+    @Req() req: LogInRequest,
   ) {
-    data.file_card_name = file.path;
+    // FIXME: user after allocate authen guard
+    // let data: CreateEnvcardDto;
+    // data.user = req.user.user_id;
+    data.file_card_name = randomFilename();
     return this.envcardService.createCardFile(data);
   }
 

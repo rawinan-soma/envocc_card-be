@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as fs from 'fs';
 import { CreateExpfileDto } from './dto/create-expfile.dto';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
+import { randomFilename } from 'src/common/randomFilename';
 
 @Injectable()
 export class ExpfileService {
@@ -29,7 +30,7 @@ export class ExpfileService {
     }
   }
 
-  async deleteCardFile(user: number) {
+  async deleteExpFile(user: number) {
     try {
       const selectedFile = await this.getExpFile(user);
 
@@ -45,11 +46,32 @@ export class ExpfileService {
     }
   }
 
-  async createCardFile(data: CreateExpfileDto) {
+  async createExpFile(data: CreateExpfileDto) {
     try {
-      return await this.prismaService.exp_files.create({ data: data });
+      const existingFile = await this.prismaService.exp_files.findFirst({
+        where: { file_name: data.file_name },
+      });
+
+      if (!existingFile) {
+        return await this.prismaService.exp_files.create({ data: data });
+      } else {
+        let isFileNameUnique: boolean = false;
+        while (!isFileNameUnique) {
+          data.file_name = randomFilename();
+
+          const existingFile = await this.prismaService.exp_files.findFirst({
+            where: { file_name: data.file_name },
+          });
+
+          if (!existingFile) {
+            isFileNameUnique = true;
+          }
+        }
+
+        return await this.prismaService.exp_files.create({ data: data });
+      }
     } catch (error: any) {
-      this.logger.error('ERROR: createExpile');
+      this.logger.error('ERROR: createExpfile');
       this.logger.error(error);
 
       serviceErrorHandler(error);
