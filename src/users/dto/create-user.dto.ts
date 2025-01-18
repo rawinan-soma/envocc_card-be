@@ -18,6 +18,7 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
+  @IsString()
   @IsEnum(ThaiNamePrefix)
   pname_th: ThaiNamePrefix;
 
@@ -30,6 +31,7 @@ export class CreateUserDto {
   @IsString()
   lname_th: string;
 
+  @IsString()
   @IsEnum(EngNamePrefix)
   pname_en: EngNamePrefix;
 

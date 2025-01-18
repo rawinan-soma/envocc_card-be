@@ -2,8 +2,8 @@ import { Type } from 'class-transformer';
 import { IsNumber, IsDate, IsString } from 'class-validator';
 
 export class CreateExperienceDto {
-  @IsNumber()
-  @Type(() => Number)
+  // @IsNumber()
+  // @Type(() => Number)
   user?: number;
 
   @IsDate()
@@ -27,6 +27,7 @@ export class CreateExperienceDto {
   @IsString()
   exp_work: string;
 
-  @IsNumber()
-  exp_years: number;
+  // @IsNumber()
+  // @Type(() => Number)
+  exp_years?: number;
 }

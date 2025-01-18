@@ -11,12 +11,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma, users } from '@prisma/client';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { CreateMainDto } from './dto/create-main.dto';
+import { ExperiencesService } from 'src/experiences/experiences.service';
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly expService: ExperiencesService,
+  ) {}
 
   async getAllUsers(queryData: {
     page: number;
@@ -294,12 +298,19 @@ export class UsersService {
         where: { OR: [{ username: username }, { email: email }] },
       });
 
+      exp.map((item) => {
+        item.exp_years = Number(
+          this.expService.calculateExpYears(item.exp_ldate, item.exp_fdate),
+        );
+      });
+
       if (existedUser) {
         throw new BadRequestException('User already existed');
       }
 
+      // return { user, exp };
       return await this.prismaService.users.create({
-        data: { ...user, experience: { createMany: { data: { ...exp } } } },
+        data: { ...user, experience: { createMany: { data: exp } } },
       });
     } catch (error: any) {
       this.logger.error('ERROR: createUser');

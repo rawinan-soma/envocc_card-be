@@ -10,7 +10,7 @@ export class ExperiencesService {
   private readonly logger = new Logger(ExperiencesService.name);
   constructor(private readonly prismaService: PrismaService) {}
 
-  private async calculateExpYears(ldate: Date, fdate: Date) {
+  calculateExpYears(ldate: Date, fdate: Date): number {
     let yeardiff = ldate.getFullYear() - fdate.getFullYear();
     if (
       ldate.getMonth() < fdate.getMonth() ||

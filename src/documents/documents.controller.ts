@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -18,6 +19,7 @@ import { AdminAuthGuard } from 'src/common/admin-auth-guard.guard';
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 import { UserRole } from 'src/common/user-roles';
 import { Roles } from '../common/user-roles-decorator';
+import LogInRequest from 'src/admin-auth/log-in-request.interface';
 
 @Controller('documents')
 export class DocumentsController {
@@ -51,7 +53,9 @@ export class DocumentsController {
   }
 
   @Get()
-  async getAllDocuments() {
+  // @Roles(UserRole.admin)
+  // @UseGuards(CookieAuthGuard)
+  async getAllDocuments(@Req() req: LogInRequest) {
     return this.documentsService.getAllDocuments();
   }
 
