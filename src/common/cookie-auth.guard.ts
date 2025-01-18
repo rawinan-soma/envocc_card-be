@@ -15,8 +15,8 @@ export class CookieAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     // return request.isAuthenticated();
 
-    console.log(request.session);
-    console.log(request.user);
+    // console.log(request.session);
+    // console.log(request.user);
 
     if (!request.isAuthenticated()) {
       throw new ForbiddenException('Users not authenticate');

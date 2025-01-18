@@ -12,12 +12,13 @@ import {
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  // @UseGuards(CookieAuthGuard)
+  @UseGuards(CookieAuthGuard)
   @Get()
   async getAdmin() {
     return this.adminsService.getAllAdmins();

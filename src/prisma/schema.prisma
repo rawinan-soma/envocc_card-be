@@ -113,7 +113,7 @@ model experiences {
   user           Int?
   exp_fdate      DateTime? @db.Date
   exp_ldate      DateTime? @db.Date
-  exp_years      Int
+  exp_years      Int?
   exp_typeoffice Int?
   exp_office     String?   @db.VarChar(255)
   exp_position   String?   @db.VarChar(255)

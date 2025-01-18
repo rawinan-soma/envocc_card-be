@@ -68,7 +68,7 @@ export class MembersService {
                       sign_persons: {
                         select: {
                           signature_pix: true,
-                          sing_person_pname: true,
+                          sign_person_pname: true,
                           sign_person_name: true,
                           sign_person_lname: true,
                           position: true,
