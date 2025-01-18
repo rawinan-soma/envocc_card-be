@@ -3,6 +3,7 @@ import { CreateGovcardDto } from './dto/create-govcard.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import * as fs from 'fs';
+import { randomFilename } from 'src/common/randomFilename';
 
 @Injectable()
 export class GovcardService {
@@ -49,7 +50,29 @@ export class GovcardService {
 
   async createGovCard(data: CreateGovcardDto) {
     try {
-      return await this.prismaService.gov_card_files.create({ data: data });
+      const existingFile = await this.prismaService.gov_card_files.findFirst({
+        where: { file_name: data.file_name },
+      });
+
+      if (!existingFile) {
+        return await this.prismaService.gov_card_files.create({ data: data });
+      } else {
+        let isFileNameUnique: boolean = false;
+        while (!isFileNameUnique) {
+          data.file_name = randomFilename();
+
+          const existingFile =
+            await this.prismaService.gov_card_files.findFirst({
+              where: { file_name: data.file_name },
+            });
+
+          if (!existingFile) {
+            isFileNameUnique = true;
+          }
+        }
+
+        return await this.prismaService.gov_card_files.create({ data: data });
+      }
     } catch (error: any) {
       this.logger.error('ERROR: createGovCard');
       this.logger.error(error);

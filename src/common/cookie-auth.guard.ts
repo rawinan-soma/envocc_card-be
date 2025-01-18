@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from './user-roles';
+import { UserRole } from './user-roles.enum';
 
 @Injectable()
 export class CookieAuthGuard implements CanActivate {

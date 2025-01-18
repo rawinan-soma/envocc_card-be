@@ -15,11 +15,11 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
-import { AdminAuthGuard } from 'src/common/admin-auth-guard.guard';
+
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 import { UserRole } from 'src/common/user-roles';
 import { Roles } from '../common/user-roles-decorator';
-import LogInRequest from 'src/admin-auth/log-in-request.interface';
+import { randomFilename } from 'src/common/randomFilename';
 
 @Controller('documents')
 export class DocumentsController {
@@ -43,12 +43,12 @@ export class DocumentsController {
       },
     },
   })
-  async insertDocument(
-    @Body() data: CreateDocumentDto,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
+  async insertDocument(@UploadedFile() file: Express.Multer.File) {
     // TODO: Apply for all file type
-    data.doc_name = Math.floor(100000 + Math.random() * 900000).toString();
+    // TODO: check duplicate file name in all service
+    let data: CreateDocumentDto;
+    data.doc_type = 1;
+    data.doc_name = randomFilename();
     return this.documentsService.createDocument(data);
   }
 
