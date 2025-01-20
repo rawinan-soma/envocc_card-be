@@ -1,3 +1,5 @@
+import LogInRequest from 'src/admin-auth/log-in-request.interface';
+
 import {
   Controller,
   Get,
@@ -17,7 +19,7 @@ import { diskStorage } from 'multer';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
-import { UserRole } from 'src/common/user-roles';
+import { UserRole } from '../common/user-roles.enum';
 import { Roles } from '../common/user-roles-decorator';
 import { randomFilename } from 'src/common/randomFilename';
 
@@ -53,8 +55,8 @@ export class DocumentsController {
   }
 
   @Get()
-  // @Roles(UserRole.admin)
-  // @UseGuards(CookieAuthGuard)
+  @Roles(UserRole.admin)
+  @UseGuards(CookieAuthGuard)
   async getAllDocuments(@Req() req: LogInRequest) {
     return this.documentsService.getAllDocuments();
   }

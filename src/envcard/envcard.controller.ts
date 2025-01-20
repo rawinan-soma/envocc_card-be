@@ -7,6 +7,7 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  Req,
 } from '@nestjs/common';
 import { EnvcardService } from './envcard.service';
 import { CreateEnvcardDto } from './dto/create-envcard.dto';
