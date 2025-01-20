@@ -29,8 +29,10 @@ export class AdminAuthController {
     const admin = req.user;
     // admin.role = 'admin';
     admin.password = undefined;
+    req.session.role = admin.role;
+    req.session.admin_id = admin.admin_id;
 
-    return admin;
+    return req.session;
   }
 
   @HttpCode(200)
