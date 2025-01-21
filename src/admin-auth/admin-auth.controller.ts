@@ -13,7 +13,7 @@ import {
 import { AdminAuthService } from './admin-auth.service';
 import { AdminLocalCredentialGuard } from './admin-local-credential.guard';
 import LogInRequest from './log-in-request.interface';
-import { AdminAuthGuard } from './../common/admin-auth-guard.guard';
+
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
 @Controller('adminAuth')

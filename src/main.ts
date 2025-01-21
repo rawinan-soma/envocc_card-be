@@ -28,6 +28,7 @@ async function bootstrap() {
       secret: configService.get('SESSION_SECRET'),
       resave: false,
       saveUninitialized: false,
+      rolling: true,
       cookie: { maxAge: 3600000 },
     }),
   );

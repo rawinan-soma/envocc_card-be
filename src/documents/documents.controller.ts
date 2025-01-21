@@ -11,6 +11,8 @@ import {
   UploadedFile,
   UseGuards,
   Req,
+  Res,
+  Header,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
