@@ -57,7 +57,7 @@ export class DocumentsController {
   }
 
   @Get()
-  async getAllDocuments(@Req() req: LogInRequest) {
+  async getAllDocuments() {
     return this.documentsService.getAllDocuments();
   }
 
