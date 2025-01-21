@@ -57,8 +57,6 @@ export class DocumentsController {
   }
 
   @Get()
-  @Roles(UserRole.admin)
-  @UseGuards(CookieAuthGuard)
   async getAllDocuments(@Req() req: LogInRequest) {
     return this.documentsService.getAllDocuments();
   }
