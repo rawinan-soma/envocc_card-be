@@ -9,7 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'fatal', 'log', 'warn'],
-    cors: true,
+    cors: { origin: 'http://localhost:3000', credentials: true },
   });
 
   const config = new DocumentBuilder()

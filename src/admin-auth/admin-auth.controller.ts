@@ -15,6 +15,7 @@ import { AdminLocalCredentialGuard } from './admin-local-credential.guard';
 import LogInRequest from './log-in-request.interface';
 
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
+import * as session from 'express-session';
 
 @Controller('adminAuth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -31,6 +32,7 @@ export class AdminAuthController {
     admin.password = undefined;
     req.session.role = admin.role;
     req.session.admin_id = admin.admin_id;
+    req.session.level = admin.level;
 
     return req.session;
   }
@@ -52,11 +54,13 @@ export class AdminAuthController {
   @UseGuards(CookieAuthGuard)
   async checkSession(@Req() req: LogInRequest) {
     const admin = req.user;
+    const cookies = req.session.cookie;
 
     return {
       admin_id: admin.admin_id,
       role: admin.role,
       level: admin.level,
+      cookies,
     };
   }
 }

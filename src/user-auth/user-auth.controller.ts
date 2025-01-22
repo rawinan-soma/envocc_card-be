@@ -6,12 +6,14 @@ import {
   UseInterceptors,
   UseGuards,
   HttpCode,
+  Get,
 } from '@nestjs/common';
 import { UserAuthService } from './user-auth.service';
 
 import { UserLocalCredentialGuard } from './user-local-credential.guard';
 import LogInRequest from './log-in-request.interface';
-import { UserAuthGuard } from 'src/common/user-auth-guard.guard';
+
+import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
 @Controller('userAuth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -29,7 +31,7 @@ export class UserAuthController {
     return user;
   }
 
-  @UseGuards(UserAuthGuard)
+  @UseGuards(CookieAuthGuard)
   @HttpCode(200)
   @Post('logout')
   async logOut(@Req() req: LogInRequest) {
@@ -40,5 +42,16 @@ export class UserAuthController {
     });
     req.session.cookie.maxAge = 0;
     return { msg: `Logout successfully` };
+  }
+
+  @Get('sessions')
+  @UseGuards(CookieAuthGuard)
+  async checkSession(@Req() req: LogInRequest) {
+    const user = req.user;
+
+    return {
+      user_id: user.user_id,
+      role: user.role,
+    };
   }
 }
