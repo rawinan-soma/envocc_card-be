@@ -7,15 +7,18 @@ import {
   Param,
   Delete,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ExperiencesService } from './experiences.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import LogInRequest from 'src/admin-auth/log-in-request.interface';
+import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
 @Controller('experiences')
 export class ExperiencesController {
   constructor(private readonly experiencesService: ExperiencesService) {}
+  @UseGuards(CookieAuthGuard)
   @Get(':user_id')
   async getOneExps(@Param('user_id') user_id: number) {
     return await this.experiencesService.getOneUserExps(user_id);

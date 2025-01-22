@@ -1,5 +1,3 @@
-import LogInRequest from 'src/admin-auth/log-in-request.interface';
-
 import {
   Controller,
   Get,
@@ -17,13 +15,15 @@ import {
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 import { UserRole } from '../common/user-roles.enum';
 import { Roles } from '../common/user-roles-decorator';
 import { randomFilename } from 'src/common/randomFilename';
+import { FilesService } from 'src/files/files.service';
+import LogInRequest from 'src/admin-auth/log-in-request.interface';
 
 @Controller('documents')
 export class DocumentsController {
@@ -31,11 +31,13 @@ export class DocumentsController {
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './assets',
+    FileInterceptor(
+      'file',
+      new FilesService().getMulterOptions({
+        allowedExtensions: ['.pdf'],
+        allowedSize: 5 * 1024 * 1024,
       }),
-    }),
+    ),
   )
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -52,12 +54,13 @@ export class DocumentsController {
     // TODO: check duplicate file name in all service
     let data: CreateDocumentDto;
     data.doc_type = 1;
-    data.doc_name = randomFilename();
+    data.doc_name = file.filename;
     return this.documentsService.createDocument(data);
   }
-
+  @UseGuards(CookieAuthGuard)
+  @Roles(UserRole.admin)
   @Get()
-  async getAllDocuments() {
+  async getAllDocuments(@Req() req: LogInRequest) {
     return this.documentsService.getAllDocuments();
   }
 

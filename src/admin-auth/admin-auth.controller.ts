@@ -7,7 +7,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Logger,
-  Res,
+  Get,
 } from '@nestjs/common';
 
 import { AdminAuthService } from './admin-auth.service';
@@ -46,5 +46,17 @@ export class AdminAuthController {
     });
     req.session.cookie.maxAge = 0;
     return { msg: `Logout successfully` };
+  }
+
+  @Get('sessions')
+  @UseGuards(CookieAuthGuard)
+  async checkSession(@Req() req: LogInRequest) {
+    const admin = req.user;
+
+    return {
+      admin_id: admin.admin_id,
+      role: admin.role,
+      level: admin.level,
+    };
   }
 }

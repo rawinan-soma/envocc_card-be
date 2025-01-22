@@ -24,6 +24,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { PositionsModule } from './positions/positions.module';
 import { PositionLvlsModule } from './position-lvls/position-lvls.module';
 import { SignPersonModule } from './sign-person/sign-person.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { SignPersonModule } from './sign-person/sign-person.module';
     PositionsModule,
     PositionLvlsModule,
     SignPersonModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
