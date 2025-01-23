@@ -298,7 +298,7 @@ model users {
   road1                                 String              @db.VarChar(255)
   province1                             Int
   amphures1                             Int
-  districts1                            Int
+  district1                             Int
   zip_code1                             Int
   house_number2                         String              @db.VarChar(255)
   moo2                                  String              @db.VarChar(255)
@@ -318,7 +318,7 @@ model users {
   create_date                           DateTime            @default(now()) @db.DateTime(0)
   envocc_card_files                     envocc_card_files[]
   exp_files                             exp_files[]
-  experience                            experiences[]
+  experiences                           experiences[]
   gov_card_files                        gov_card_files[]
   members                               members?
   photos                                photos[]
@@ -329,7 +329,7 @@ model users {
   institutions                          institutions        @relation(fields: [institution], references: [institution_id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
   positions                             positions           @relation(fields: [position], references: [position_id])
   position_lvs                          position_lvs        @relation(fields: [position_lv], references: [position_lv_id])
-  epositions                            epositions?         @relation(fields: [eposition], references: [eposition_id])
+  epositions                            epositions          @relation(fields: [eposition], references: [eposition_id])
 
   @@id([username, email, user_id])
   @@index([institution], map: "institution")

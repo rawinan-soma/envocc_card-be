@@ -85,7 +85,7 @@ export class CreateUserDto {
   amphures1: number;
 
   @IsNumber()
-  districts1: number;
+  district1: number;
 
   @IsNumber()
   zip_code1: number;

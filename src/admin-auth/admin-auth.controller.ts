@@ -50,7 +50,7 @@ export class AdminAuthController {
     return { msg: `Logout successfully` };
   }
 
-  @Get('sessions')
+  @Get('session')
   @UseGuards(CookieAuthGuard)
   async checkSession(@Req() req: LogInRequest) {
     const admin = req.user;

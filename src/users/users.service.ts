@@ -218,7 +218,7 @@ export class UsersService {
           pname_other_en: true,
           fname_en: true,
           lname_en: true,
-          experience: true,
+          experiences: true,
         },
       });
 
@@ -298,19 +298,22 @@ export class UsersService {
         where: { OR: [{ username: username }, { email: email }] },
       });
 
+      if (existedUser) {
+        throw new BadRequestException('User already existed');
+      }
+
       exp.map((item) => {
         item.exp_years = Number(
           this.expService.calculateExpYears(item.exp_ldate, item.exp_fdate),
         );
       });
-
-      if (existedUser) {
-        throw new BadRequestException('User already existed');
-      }
-
       // return { user, exp };
       return await this.prismaService.users.create({
-        data: { ...user, experience: { createMany: { data: exp } } },
+        data: {
+          ...user,
+          experiences: { createMany: { data: exp } },
+          requests: { create: { request_status: 0, request_type: 1 } },
+        },
       });
     } catch (error: any) {
       this.logger.error('ERROR: createUser');
