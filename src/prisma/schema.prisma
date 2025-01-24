@@ -165,19 +165,20 @@ model institutions {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model members {
-  member_id   Int      @unique @default(autoincrement())
+  member_id   Int       @unique @default(autoincrement())
   member_no   Int?
-  user        Int      @unique(map: "user")
-  start_date  DateTime @db.Date
-  end_date    DateTime @db.Date
-  qrcode      String   @db.VarChar(255)
-  qrcode_pass String   @db.VarChar(255)
-  signer      Int
-  is_active   Boolean  @default(true)
-  num_print   Int      @default(2)
-  users       users    @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "members_ibfk_1")
+  user        Int
+  start_date  DateTime? @db.Date
+  end_date    DateTime? @db.Date
+  qrcode      String?   @db.VarChar(255)
+  qrcode_pass String?   @db.VarChar(255)
+  signer      Int?
+  is_active   Boolean   @default(true)
+  num_print   Int       @default(2)
+  create_date DateTime  @default(now()) @db.Date
+  users       users     @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "members_ibfk_1")
 
-  @@id([member_id, start_date])
+  // @@id([member_id, start_date])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -287,23 +288,23 @@ model users {
   fname_en                              String              @db.VarChar(255)
   lname_en                              String              @db.VarChar(255)
   birthday                              DateTime            @db.Date
-  nationality                           Int
+  nationality                           String              @db.VarChar(255)
   blood                                 String
   work_number                           String
   private_number                        String
   email                                 String              @unique(map: "email") @db.VarChar(255)
   house_number1                         String              @db.VarChar(255)
   moo1                                  Int
-  alley1                                String              @db.VarChar(255)
-  road1                                 String              @db.VarChar(255)
+  alley1                                String?             @db.VarChar(255)
+  road1                                 String?             @db.VarChar(255)
   province1                             Int
   amphures1                             Int
   district1                             Int
   zip_code1                             Int
   house_number2                         String              @db.VarChar(255)
-  moo2                                  String              @db.VarChar(255)
-  alley2                                String              @db.VarChar(255)
-  road2                                 String              @db.VarChar(255)
+  moo2                                  Int
+  alley2                                String?             @db.VarChar(255)
+  road2                                 String?             @db.VarChar(255)
   province2                             Int
   amphures2                             Int
   district2                             Int
@@ -320,7 +321,7 @@ model users {
   exp_files                             exp_files[]
   experiences                           experiences[]
   gov_card_files                        gov_card_files[]
-  members                               members?
+  members                               members[]
   photos                                photos[]
   request_files                         request_files[]
   requests                              requests[]

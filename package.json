@@ -26,6 +26,7 @@
     "start:migrate:seed:dev:watch": "cd ./src && prisma migrate deploy && npm run seed && npm run start:dev"
   },
   "dependencies": {
+    "@nestjs/bullmq": "^11.0.1",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
@@ -39,9 +40,11 @@
     "@types/express-session": "^1.18.0",
     "@types/passport-local": "^1.0.38",
     "bcryptjs": "^2.4.3",
+    "bullmq": "^5.35.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "express-session": "^1.18.0",
+    "ioredis": "^5.4.2",
     "joi": "^17.13.3",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",

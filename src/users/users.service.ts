@@ -87,7 +87,6 @@ export class UsersService {
       const users = await this.prismaService.users.findMany({
         skip: offset,
         take: limit,
-        orderBy: { members: { end_date: 'desc' } },
         select: {
           user_id: true,
           pname_th: true,
@@ -100,12 +99,16 @@ export class UsersService {
               departments: {
                 select: {
                   department_name_th: true,
+                  sign_persons: { select: { sign_person_id: true } },
                   ministries: { select: { ministry_name_th: true } },
                 },
               },
             },
           },
-          members: { select: { start_date: true, end_date: true } },
+          members: {
+            select: { start_date: true, end_date: true },
+            orderBy: { end_date: 'desc' },
+          },
           requests: { select: { request_status: true } },
         },
         where: adminLevelFilter,
@@ -170,7 +173,16 @@ export class UsersService {
                       ministry_name_eng: true,
                     },
                   },
-                  sign_persons: true,
+                  sign_persons: {
+                    select: {
+                      sign_person_pname: true,
+                      sign_person_name: true,
+                      sign_person_lname: true,
+                      signature_pix: true,
+                      position: true,
+                    },
+                  },
+                  seals: { select: { seal_pix: true } },
                 },
               },
             },

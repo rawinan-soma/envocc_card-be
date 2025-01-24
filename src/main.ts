@@ -9,7 +9,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'fatal', 'log', 'warn'],
-    cors: { origin: 'http://localhost:3000', credentials: true },
+    cors: {
+      origin: 'http://localhost:3000',
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    },
   });
 
   const config = new DocumentBuilder()
@@ -29,7 +34,13 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       rolling: true,
-      cookie: { maxAge: 3600000 },
+      cookie: {
+        maxAge: 3600000,
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        path: '/',
+      },
     }),
   );
 

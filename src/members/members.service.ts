@@ -103,16 +103,25 @@ export class MembersService {
 
   async createMember(data: CreateMemberDto) {
     try {
-      const endDate = new Date(data.start_date);
-      endDate.setFullYear(endDate.getFullYear() + 5);
-      endDate.setDate(endDate.getDate() - 1);
+      // TODO: Search member_no and add in create
+      // const endDate = new Date(data.start_date);
+      // endDate.setFullYear(endDate.getFullYear() + 5);
+      // endDate.setDate(endDate.getDate() - 1);
 
       const initPassword = Math.floor(
-        100000 + Math.random() * 900000,
+        10000000 + Math.random() * 90000000,
+      ).toString();
+
+      const initQRCode = Math.floor(
+        10000000 + Math.random() * 90000000,
       ).toString();
 
       return await this.prismaService.members.create({
-        data: { end_date: endDate, qrcode_pass: initPassword, ...data },
+        data: {
+          qrcode: initQRCode,
+          qrcode_pass: initPassword,
+          ...data,
+        },
       });
     } catch (error: any) {
       this.logger.error('ERROR: createMember');
@@ -122,9 +131,13 @@ export class MembersService {
     }
   }
 
-  async deactivateMember(member_no: number, data: UpdateMemberDto) {
+  async deactivateMember(data: UpdateMemberDto) {
     try {
-      const selectedMember = await this.getMember(member_no);
+      const selectedMember = await this.prismaService.members.findFirst({
+        where: { user: data.user },
+        orderBy: { start_date: 'desc' },
+        select: { member_id: true, is_active: true },
+      });
       const isInactive = selectedMember.is_active === false;
 
       if (!isInactive) {
@@ -148,13 +161,17 @@ export class MembersService {
 
   async setQrPassword(user_id: number, password: string) {
     try {
-      const selectedMember = await this.getMember(user_id);
+      const selectedMember = await this.prismaService.members.findFirst({
+        where: { user: user_id },
+        orderBy: { start_date: 'desc' },
+        select: { member_id: true, is_active: true, qrcode_pass: true },
+      });
       const hasPassword = selectedMember.qrcode_pass !== '';
       if (hasPassword) {
         throw new BadRequestException('This card already has password');
       } else {
         return this.prismaService.members.update({
-          where: { user: user_id, end_date: selectedMember.end_date },
+          where: { member_id: selectedMember.member_id },
           data: { qrcode_pass: password },
           omit: {
             qrcode_pass: true,
@@ -167,5 +184,30 @@ export class MembersService {
 
       serviceErrorHandler(error);
     }
+  }
+
+  async getMemberByQrcode(qrcode_no: string) {
+    return this.prismaService.members.findFirst({
+      where: { qrcode: qrcode_no },
+      select: { user: true },
+    });
+  }
+
+  async updateStartDate(user_id: number, start_date: string) {
+    const targetMember = await this.prismaService.members.findFirst({
+      where: { user: user_id },
+      orderBy: { create_date: 'desc' },
+      select: { member_id: true },
+    });
+
+    const startDate = new Date(start_date);
+    let endDate: Date;
+    endDate.setFullYear(startDate.getFullYear() + 5);
+    endDate.setDate(endDate.getDate() - 1);
+
+    return this.prismaService.members.update({
+      where: { member_id: targetMember.member_id },
+      data: { start_date: startDate, end_date: endDate },
+    });
   }
 }

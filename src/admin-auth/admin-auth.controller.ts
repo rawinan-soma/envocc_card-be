@@ -54,6 +54,7 @@ export class AdminAuthController {
   @UseGuards(CookieAuthGuard)
   async checkSession(@Req() req: LogInRequest) {
     const admin = req.user;
+    req.user.password = undefined;
     const cookies = req.session.cookie;
 
     return {

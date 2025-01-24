@@ -31,12 +31,9 @@ export class MembersController {
     return this.membersService.createMember(newMember);
   }
 
-  @Patch('deactivation/:member_no')
-  async deactivateMember(
-    @Param('member_no') member_no: number,
-    @Body() deactivatedMember: UpdateMemberDto,
-  ) {
-    return this.membersService.deactivateMember(member_no, deactivatedMember);
+  @Patch('deactivation')
+  async deactivateMember(@Body() deactivatedMember: UpdateMemberDto) {
+    return this.membersService.deactivateMember(deactivatedMember);
   }
 
   @Patch('qrpassword/:user_id')
@@ -45,5 +42,10 @@ export class MembersController {
     @Body('password') password: string,
   ) {
     return this.membersService.setQrPassword(user_id, password);
+  }
+
+  @Get('qrcode/:qrcode_no')
+  async getByQRCode(@Param() qrcode_no: string) {
+    return this.membersService.getMemberByQrcode(qrcode_no);
   }
 }
