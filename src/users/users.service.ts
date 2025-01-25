@@ -322,9 +322,9 @@ export class UsersService {
       // return { user, exp };
       return await this.prismaService.users.create({
         data: {
-          ...user,
           experiences: { createMany: { data: exp } },
           requests: { create: { request_status: 0, request_type: 1 } },
+          ...user,
         },
       });
     } catch (error: any) {

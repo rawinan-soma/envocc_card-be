@@ -175,7 +175,7 @@ model members {
   signer      Int?
   is_active   Boolean   @default(true)
   num_print   Int       @default(2)
-  create_date DateTime  @default(now()) @db.Date
+  create_date DateTime  @default(now()) @db.DateTime(0)
   users       users     @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "members_ibfk_1")
 
   // @@id([member_id, start_date])
@@ -327,7 +327,7 @@ model users {
   requests                              requests[]
   resetpass_resetpass_userTousers       resetpass[]         @relation("resetpass_userTousers")
   resetpass_resetpass_user_emailTousers resetpass[]         @relation("resetpass_user_emailTousers")
-  institutions                          institutions        @relation(fields: [institution], references: [institution_id], onDelete: NoAction, onUpdate: NoAction, map: "users_ibfk_1")
+  institutions                          institutions        @relation(fields: [institution], references: [institution_id], map: "users_ibfk_1")
   positions                             positions           @relation(fields: [position], references: [position_id])
   position_lvs                          position_lvs        @relation(fields: [position_lv], references: [position_lv_id])
   epositions                            epositions          @relation(fields: [eposition], references: [eposition_id])

@@ -49,7 +49,7 @@ export class CreateUserDto {
   birthday: Date;
 
   @IsNumber()
-  nationality: number;
+  nationality: string;
 
   @IsEnum(BloodGroup)
   blood: BloodGroup;
@@ -93,8 +93,8 @@ export class CreateUserDto {
   @IsString()
   house_number2: string;
 
-  @IsString()
-  moo2: string;
+  @IsNumber()
+  moo2: number;
 
   @IsString()
   alley2: string;
