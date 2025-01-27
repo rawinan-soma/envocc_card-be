@@ -25,7 +25,7 @@ import { PositionsModule } from './positions/positions.module';
 import { PositionLvlsModule } from './position-lvls/position-lvls.module';
 import { SignPersonModule } from './sign-person/sign-person.module';
 import { FilesModule } from './files/files.module';
-import { QueueModule } from './queue/queue.module';
+// import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -60,7 +60,7 @@ import { QueueModule } from './queue/queue.module';
     PositionLvlsModule,
     SignPersonModule,
     FilesModule,
-    QueueModule,
+    // QueueModule,
   ],
   controllers: [AppController],
   providers: [AppService],

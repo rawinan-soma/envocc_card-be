@@ -10,23 +10,23 @@ RUN cd ./src && npx prisma generate
 
 
 
-FROM base AS dev-migrate-seed
+# FROM base AS dev-migrate-seed
 
-CMD ["npm", "run", "start:migrate:seed:dev"]
+# CMD ["npm", "run", "start:migrate:seed:dev"]
 
-FROM base AS prod
+# FROM base AS prod
 
-RUN npm run build
+# RUN npm run build
 
-USER node
+# USER node
 
-CMD ["npm", "run", "start:migrate:seed:prod"]
+# CMD ["npm", "run", "start:migrate:seed:prod"]
 
 FROM base AS dev
 
 CMD ["npm", "run", "start"]
 
-FROM base AS prod-no-seed
+FROM base AS prod
 
 RUN npm run build
 

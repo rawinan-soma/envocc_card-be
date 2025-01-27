@@ -48,7 +48,7 @@ export class CreateUserDto {
   @Type(() => Date)
   birthday: Date;
 
-  @IsNumber()
+  @IsString()
   nationality: string;
 
   @IsEnum(BloodGroup)

@@ -26,73 +26,25 @@ services:
       timeout: 5s
       retries: 3
     restart: always
-  envcard-api-fresh:
+
+  seeder:
+    container_name: seeder
     build:
       context: .
       dockerfile: Dockerfile
-      target: prod
+      target: base
     env_file:
       - /src/.env
-    ports:
-      - '3002:3000'
     depends_on:
       envcard-mysql:
         condition: service_healthy
-    restart: always
+    command: ['npm', 'run', 'start:seed']
+    restart: no
     networks:
       - envcard-network
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
-      interval: 10s
-      timeout: 5s
-      retries: 3
     profiles:
-      - 'prod-fresh'
-  envcard-api-update:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: prod-no-seed
-    env_file:
-      - /src/.env
-    ports:
-      - '3002:3000'
-    depends_on:
-      envcard-mysql:
-        condition: service_healthy
-    restart: always
-    networks:
-      - envcard-network
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    profiles:
-      - 'prod-update'
-  envcard-api-dev-fresh:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev-migrate-seed
-    env_file:
-      - /src/.env
-    ports:
-      - '3002:3000'
-    depends_on:
-      envcard-mysql:
-        condition: service_healthy
-    restart: always
-    networks:
-      - envcard-network
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    profiles:
-      - 'dev-fresh'
-  envcard-api-dev-update:
+      - 'seed'
+  envcard-api-dev:
     build:
       context: .
       dockerfile: Dockerfile
@@ -104,6 +56,7 @@ services:
     depends_on:
       envcard-mysql:
         condition: service_healthy
+
     restart: always
     networks:
       - envcard-network
@@ -113,12 +66,36 @@ services:
       timeout: 5s
       retries: 3
     profiles:
-      - 'dev-update'
+      - 'dev'
+
+  envcard-api-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    env_file:
+      - /src/.env
+    ports:
+      - '3002:3000'
+    depends_on:
+      envcard-mysql:
+        condition: service_healthy
+
+    restart: always
+    networks:
+      - envcard-network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    profiles:
+      - 'prod'
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     profiles:
       - 'dev'
-      - 'dev-fresh'
     container_name: phpmyadmin
     environment:
       PMA_HOST: envcard-mysql

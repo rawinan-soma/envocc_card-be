@@ -23,7 +23,8 @@
     "start:migrate:prod": "cd ./src && prisma migrate deploy &&  npm run start:prod",
     "start:migrate:seed:dev": "cd ./src && prisma migrate deploy && npm run seed && npm run start",
     "start:migrate:dev": "cd ./src && prisma migrate deploy && npm run start",
-    "start:migrate:seed:dev:watch": "cd ./src && prisma migrate deploy && npm run seed && npm run start:dev"
+    "start:migrate:seed:dev:watch": "cd ./src && prisma migrate deploy && npm run seed && npm run start:dev",
+    "start:seed": "cd ./src && prisma migrate deploy && npm run seed"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.1",
