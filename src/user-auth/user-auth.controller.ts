@@ -25,10 +25,11 @@ export class UserAuthController {
   @Post('login')
   async logIn(@Req() req: LogInRequest) {
     const user = req.user;
-    user.role = 'user';
     user.password = undefined;
+    req.session.role = user.role;
+    req.session.user_id = user.user_id;
 
-    return user;
+    return req.session;
   }
 
   @UseGuards(CookieAuthGuard)
@@ -48,10 +49,13 @@ export class UserAuthController {
   @UseGuards(CookieAuthGuard)
   async checkSession(@Req() req: LogInRequest) {
     const user = req.user;
+    req.user.password = undefined;
+    const cookies = req.session.cookie;
 
     return {
       user_id: user.user_id,
       role: user.role,
+      cookies,
     };
   }
 }

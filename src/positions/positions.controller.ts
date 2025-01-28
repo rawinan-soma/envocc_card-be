@@ -12,6 +12,7 @@ export class PositionsController {
 
   @Get(':position_id')
   async getOnePosition(@Param('position_id') position_id: number) {
-    await this.positionsService.getPositionByID(position_id);
+    console.log(position_id);
+    return await this.positionsService.getPositionByID(position_id);
   }
 }

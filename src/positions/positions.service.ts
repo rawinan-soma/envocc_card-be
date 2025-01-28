@@ -10,7 +10,9 @@ export class PositionsService {
 
   async getAllPosition() {
     try {
-      const positions = await this.prisma.positions.findMany();
+      const positions = await this.prisma.positions.findMany({
+        where: { position_id: { not: 99 } },
+      });
 
       return positions;
     } catch (error: any) {
@@ -23,7 +25,9 @@ export class PositionsService {
   async getPositionByID(position_id: number) {
     try {
       const position = await this.prisma.positions.findUnique({
-        where: { position_id: position_id },
+        where: {
+          position_id: position_id,
+        },
       });
 
       return position;

@@ -10,7 +10,9 @@ export class PositionLvlsService {
 
   async getAllLevels() {
     try {
-      const levels = await this.prisma.position_lvs.findMany();
+      const levels = await this.prisma.position_lvs.findMany({
+        where: { position_lv_id: { not: 99 } },
+      });
 
       return levels;
     } catch (error: any) {
