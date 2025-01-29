@@ -12,13 +12,13 @@ import {
 import { ExperiencesService } from './experiences.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
-import LogInRequest from 'src/admin-auth/log-in-request.interface';
-import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
+// import LogInRequest from 'src/admin-auth/log-in-request.interface';
+// import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
 @Controller('experiences')
 export class ExperiencesController {
   constructor(private readonly experiencesService: ExperiencesService) {}
-  @UseGuards(CookieAuthGuard)
+  // @UseGuards(CookieAuthGuard)
   @Get(':user_id')
   async getOneExps(@Param('user_id') user_id: number) {
     return await this.experiencesService.getOneUserExps(user_id);
@@ -43,8 +43,9 @@ export class ExperiencesController {
   }
 
   @Get('expsForm')
-  async getExpsForm(@Req() req: LogInRequest) {
-    const institution_id = req.user.institution;
+  async getExpsForm() {
+    // const institution_id = req.user.institution;
+    const institution_id = 1;
 
     return await this.experiencesService.getAllExpByInstitution(institution_id);
   }

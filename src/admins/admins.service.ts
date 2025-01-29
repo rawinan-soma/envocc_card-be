@@ -162,4 +162,8 @@ export class AdminsService {
       serviceErrorHandler(error);
     }
   }
+
+  // TODO: Query admins by instituion
+  // รับ Inst จาก QueryParameters Filter by Institution
+  // คืนค่า Admin ตามระดับ
 }

@@ -54,29 +54,30 @@ export class DocumentsService {
 
   async createDocument(data: CreateDocumentDto) {
     try {
-      // TODO: Apply to all file
-      const existingFile = await this.prismaService.documents.findFirst({
-        where: { doc_name: data.doc_name },
-      });
+      // // TODO: Apply to all file
+      // const existingFile = await this.prismaService.documents.findFirst({
+      //   where: { doc_name: data.doc_name },
+      // });
 
-      if (!existingFile) {
-        return await this.prismaService.documents.create({ data: data });
-      } else {
-        let isFileNameUnique: boolean = false;
-        while (!isFileNameUnique) {
-          data.doc_name = randomFilename();
+      // if (!existingFile) {
+      //   return await this.prismaService.documents.create({ data: data });
+      // } else {
+      //   let isFileNameUnique: boolean = false;
+      //   while (!isFileNameUnique) {
+      //     data.doc_name = randomFilename();
 
-          const existingFile = await this.prismaService.documents.findFirst({
-            where: { doc_name: data.doc_name },
-          });
+      //     const existingFile = await this.prismaService.documents.findFirst({
+      //       where: { doc_name: data.doc_name },
+      //     });
 
-          if (!existingFile) {
-            isFileNameUnique = true;
-          }
-        }
+      //     if (!existingFile) {
+      //       isFileNameUnique = true;
+      //     }
+      //   }
 
-        return await this.prismaService.documents.create({ data: data });
-      }
+      //   return await this.prismaService.documents.create({ data: data });
+      // }
+      return await this.prismaService.documents.create({ data: data });
     } catch (error: any) {
       this.logger.error('ERROR: createDocument');
       this.logger.error(error);

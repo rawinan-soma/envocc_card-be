@@ -11,7 +11,7 @@ export class CreateSignPersonDto {
   sign_person_lname: string;
 
   @IsString()
-  signature_pix: string;
+  signature_pix?: string;
 
   @IsNumber()
   department: number;

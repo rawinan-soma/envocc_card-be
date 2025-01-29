@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import LogInRequest from 'src/admin-auth/log-in-request.interface';
+// import LogInRequest from 'src/admin-auth/log-in-request.interface';
 import { CreateMainDto } from './dto/create-main.dto';
 
 @Controller('users')
@@ -20,7 +20,7 @@ export class UsersController {
 
   @Get()
   async getUsers(
-    @Req() req: LogInRequest,
+    // @Req() req: LogInRequest,
     // @Query('adminLevel') adminLevel: number,
     // @Query('adminInst') adminInst: number,
     @Query('page') page: string,
@@ -33,8 +33,11 @@ export class UsersController {
       page == '0' || !page || page.match(/[a-zA-Z]/) ? 1 : parseInt(page, 10);
     // const pageNumber = parseInt(page, 10) || 1;
 
-    const adminLevel = req.user.level;
-    const adminInst = req.user.institution;
+    const adminLevel = 1;
+    const adminInst = 1;
+
+    // const adminLevel = req.user.level;
+    // const adminInst = req.user.institution;
 
     return this.usersService.getAllUsers({
       adminLevel: adminLevel,

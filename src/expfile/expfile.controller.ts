@@ -17,7 +17,7 @@ import { CreateExpfileDto } from './dto/create-expfile.dto';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 import { diskStorage } from 'multer';
 import { randomFilename } from 'src/common/randomFilename';
-import LogInRequest from 'src/user-auth/log-in-request.interface';
+// import LogInRequest from 'src/user-auth/log-in-request.interface';
 
 @Controller('expFiles')
 export class ExpfileController {
@@ -44,7 +44,7 @@ export class ExpfileController {
   async uploadEnvCardFile(
     @Body() data: CreateExpfileDto,
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: LogInRequest,
+    // @Req() req: LogInRequest,
   ) {
     // FIXME: use after allocate authen guard in full test and prod stage
     // let data: CreateExpfileDto;

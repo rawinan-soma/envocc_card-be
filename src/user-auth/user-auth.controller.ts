@@ -1,61 +1,48 @@
 import {
   Controller,
+  Get,
   Post,
   Req,
   ClassSerializerInterceptor,
   UseInterceptors,
   UseGuards,
   HttpCode,
-  Get,
+  Res,
 } from '@nestjs/common';
-import { UserAuthService } from './user-auth.service';
+import { UserAuthService } from 'src/user-auth/user-auth.service';
+import { UserLocalGuard } from 'src/user-auth/user-local.guard';
+import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+import UserRequest from 'src/user-auth/user-request.interface';
+import { Response } from 'express';
 
-import { UserLocalCredentialGuard } from './user-local-credential.guard';
-import LogInRequest from './log-in-request.interface';
-
-import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
-
-@Controller('userAuth')
+@Controller('user-auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserAuthController {
   constructor(private readonly userAuthService: UserAuthService) {}
-
-  @UseGuards(UserLocalCredentialGuard)
   @HttpCode(200)
+  @UseGuards(UserLocalGuard)
   @Post('login')
-  async logIn(@Req() req: LogInRequest) {
-    const user = req.user;
-    user.password = undefined;
-    req.session.role = user.role;
-    req.session.user_id = user.user_id;
-
-    return req.session;
+  async logIn(@Req() request: UserRequest) {
+    return request.session;
   }
 
-  @UseGuards(CookieAuthGuard)
   @HttpCode(200)
-  @Post('logout')
-  async logOut(@Req() req: LogInRequest) {
-    req.logout(function (err) {
-      if (err) {
-        return err;
-      }
-    });
-    req.session.cookie.maxAge = 0;
-    return { msg: `Logout successfully` };
+  @UseGuards(UserCookieGuard)
+  @Get()
+  async authentication(@Req() request: UserRequest) {
+    return request.session;
   }
 
-  @Get('sessions')
-  @UseGuards(CookieAuthGuard)
-  async checkSession(@Req() req: LogInRequest) {
-    const user = req.user;
-    req.user.password = undefined;
-    const cookies = req.session.cookie;
+  @HttpCode(200)
+  @UseGuards(UserCookieGuard)
+  @Post('logout')
+  async logOut(@Req() request: UserRequest) {
+    request.logOut((error) => {
+      return error;
+    });
+    // response.clearCookie('connect.sid');
+    request.session.cookie.maxAge = 0;
 
-    return {
-      user_id: user.user_id,
-      role: user.role,
-      cookies,
-    };
+    return { msg: 'logout' };
   }
 }

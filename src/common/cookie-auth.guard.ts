@@ -1,38 +1,23 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { UserRole } from './user-roles.enum';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CookieAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
-  async canActivate(context: ExecutionContext) {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    // return request.isAuthenticated();
+    const user = request.user;
 
-    // console.log(request.session);
-    // console.log(request.user);
-
-    if (!request.isAuthenticated()) {
-      throw new ForbiddenException('Users not authenticate');
+    if (!user) {
+      return false;
     }
 
-    const roles = this.reflector.get<UserRole[]>('roles', context.getHandler());
+    return this.validateUser(user);
+  }
 
-    if (!roles) {
-      return true;
-    }
-
-    const userRole = request.user.role;
-
-    if (!roles.includes(userRole)) {
-      throw new UnauthorizedException();
-    }
-    return true;
+  protected validateUser(user: any): boolean {
+    console.log('FROM COOKIEAUTH Checking user: ', user);
+    return !!user && (user.role === 'user' || user.role === 'admin');
   }
 }

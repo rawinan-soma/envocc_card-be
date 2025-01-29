@@ -4,16 +4,21 @@ import { extname } from 'path';
 import { randomFilename } from 'src/common/randomFilename';
 
 interface MulterOptionsParams {
+  destination: string;
   allowedExtensions: string[];
   allowedSize: number;
 }
 
 @Injectable()
 export class FilesService {
-  getMulterOptions({ allowedExtensions, allowedSize }: MulterOptionsParams) {
+  getMulterOptions({
+    destination,
+    allowedExtensions,
+    allowedSize,
+  }: MulterOptionsParams) {
     return {
       storage: diskStorage({
-        destination: './assets',
+        destination: destination,
         filename: (req, file, cb) => {
           const suffix: string = Date.now() + '-' + randomFilename();
           cb(null, `${file.fieldname}-${suffix}${extname(file.originalname)}`);

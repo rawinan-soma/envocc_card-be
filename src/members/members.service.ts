@@ -131,10 +131,10 @@ export class MembersService {
     }
   }
 
-  async deactivateMember(data: UpdateMemberDto) {
+  async deactivateMember(user_id: number) {
     try {
       const selectedMember = await this.prismaService.members.findFirst({
-        where: { user: data.user },
+        where: { user: user_id },
         orderBy: { start_date: 'desc' },
         select: { member_id: true, is_active: true },
       });
@@ -145,7 +145,6 @@ export class MembersService {
           where: { member_id: selectedMember.member_id },
           data: {
             is_active: false,
-            ...data,
           },
         });
       } else {

@@ -1,67 +1,43 @@
 import {
   Controller,
-  Req,
-  UseGuards,
   HttpCode,
+  UseGuards,
   Post,
-  UseInterceptors,
-  ClassSerializerInterceptor,
-  Logger,
+  Req,
   Get,
 } from '@nestjs/common';
-
 import { AdminAuthService } from './admin-auth.service';
-import { AdminLocalCredentialGuard } from './admin-local-credential.guard';
-import LogInRequest from './log-in-request.interface';
+import { AdminLocalGuard } from './admin-local.guard';
+import AdminRequest from './admin-request.interface';
+import { AdminCookieGuard } from './admin-cookie.guard';
 
-import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
-import * as session from 'express-session';
-
-@Controller('adminAuth')
-@UseInterceptors(ClassSerializerInterceptor)
+@Controller('admin-auth')
 export class AdminAuthController {
-  private readonly logger = new Logger(AdminAuthController.name);
   constructor(private readonly adminAuthService: AdminAuthService) {}
 
-  @UseGuards(AdminLocalCredentialGuard)
   @HttpCode(200)
+  @UseGuards(AdminLocalGuard)
   @Post('login')
-  async logIn(@Req() req: LogInRequest) {
-    const admin = req.user;
-    // admin.role = 'admin';
-    admin.password = undefined;
-    req.session.role = admin.role;
-    req.session.admin_id = admin.admin_id;
-    req.session.level = admin.level;
-
-    return req.session;
+  async logIn(@Req() request: AdminRequest) {
+    return request.session;
   }
 
   @HttpCode(200)
-  @Post('logout')
-  @UseGuards(CookieAuthGuard)
-  async logOut(@Req() req: LogInRequest) {
-    req.logout(function (err) {
-      if (err) {
-        return err;
-      }
-    });
-    req.session.cookie.maxAge = 0;
-    return { msg: `Logout successfully` };
+  @UseGuards(AdminCookieGuard)
+  @Get()
+  async authentication(@Req() request: AdminRequest) {
+    return request.session;
   }
 
-  @Get('sessions')
-  @UseGuards(CookieAuthGuard)
-  async checkSession(@Req() req: LogInRequest) {
-    const admin = req.user;
-    req.user.password = undefined;
-    const cookies = req.session.cookie;
+  @HttpCode(200)
+  @UseGuards(AdminCookieGuard)
+  @Post('logout')
+  async logOut(@Req() request: AdminRequest) {
+    request.logOut((error) => {
+      return error;
+    });
 
-    return {
-      admin_id: admin.admin_id,
-      role: admin.role,
-      level: admin.level,
-      cookies,
-    };
+    request.session.cookie.maxAge = 0;
+    return { msg: 'logout' };
   }
 }

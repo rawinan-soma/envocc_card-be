@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { RequestsService } from './requests.service';
-import LogInRequest from 'src/admin-auth/log-in-request.interface';
+// import LogInRequest from 'src/admin-auth/log-in-request.interface';
 import { createStatusDto } from './dto/create-status.dto';
 import { CreateNewRequestDto } from './dto/create-new-request.dto';
 
@@ -28,12 +28,11 @@ export class RequestsController {
 
   @Post('update')
   async updateStatus(
-    @Req() req: LogInRequest,
+    // @Req() req: LogInRequest,
     @Body() updatedStatus: createStatusDto,
   ) {
-    const approver = req.user.admin_id;
-
-    return this.requestsService.updateStatus(updatedStatus, approver);
+    // const approver = req.user.admin_id;
+    // return this.requestsService.updateStatus(updatedStatus, approver);
   }
 
   @Post('newcard')

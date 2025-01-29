@@ -31,9 +31,9 @@ export class MembersController {
     return this.membersService.createMember(newMember);
   }
 
-  @Patch('deactivation')
-  async deactivateMember(@Body() deactivatedMember: UpdateMemberDto) {
-    return this.membersService.deactivateMember(deactivatedMember);
+  @Patch('users/:user_id/deactivation')
+  async deactivateMember(@Param() user_id: number) {
+    return this.membersService.deactivateMember(user_id);
   }
 
   @Patch('qrpassword/:user_id')

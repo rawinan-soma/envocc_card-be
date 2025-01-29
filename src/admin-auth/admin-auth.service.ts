@@ -1,41 +1,30 @@
-import {
-  BadRequestException,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
-
-import { AdminsService } from '../admins/admins.service';
-// import * as bcrypt from 'bcrypt';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { AdminsService } from 'src/admins/admins.service';
+import { serviceErrorHandler } from 'src/common/services.error.handler';
 
 @Injectable()
 export class AdminAuthService {
-  constructor(private readonly adminsService: AdminsService) {}
-  private readonly logger = new Logger(AdminAuthService.name);
-  private async verifyPassword(inputPassword: string, password: string) {
-    // FIXME: This line use only in DEVELOP stage
-    // !! DO NOT USE THIS IN PRODUCTION บาปมาก
-    const isPasswordMatch = inputPassword === password;
+  constructor(private readonly admins: AdminsService) {}
 
-    if (!isPasswordMatch) {
-      throw new UnauthorizedException('Wrong Credential provided');
-    }
-  }
-
-  async getAuthenticatedAdmin(username: string, password: string) {
+  public async getAuthenticatedAdmin(username: string, password: string) {
     try {
-      const admin = await this.adminsService.getAdminByUsername(username);
-
-      if (!admin) {
-        throw new BadRequestException('User not found');
-      }
+      const admin = await this.admins.getAdminByUsername(username);
 
       await this.verifyPassword(password, admin.password);
 
       return admin;
-    } catch (error: any) {
-      this.logger.error('ERROR: getAuthenticatedAdmin');
-      this.logger.error(error);
+    } catch (error) {
+      serviceErrorHandler(error);
     }
   }
+
+  private async verifyPassword(inputPassword: string, storePassword: string) {
+    const isPasswordMatching = inputPassword === storePassword;
+
+    if (!isPasswordMatching) {
+      throw new UnauthorizedException('Wrong credential');
+    }
+  }
+
+  // TODO: enforce session to be 1 session at a time
 }

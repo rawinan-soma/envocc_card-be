@@ -2,15 +2,12 @@ import {
   Controller,
   Get,
   Post,
-  Body,
   Param,
   Delete,
   UseInterceptors,
   UploadedFile,
   UseGuards,
-  Req,
-  Res,
-  Header,
+  Body,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -18,12 +15,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 
-import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
-import { UserRole } from '../common/user-roles.enum';
-import { Roles } from '../common/user-roles-decorator';
-import { randomFilename } from 'src/common/randomFilename';
 import { FilesService } from 'src/files/files.service';
-import LogInRequest from 'src/admin-auth/log-in-request.interface';
+import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
+import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+// import { UserLocalCredentialGuard } from 'src/user-auth/user-local-credential.guard';
 
 @Controller('documents')
 export class DocumentsController {
@@ -34,33 +29,30 @@ export class DocumentsController {
     FileInterceptor(
       'file',
       new FilesService().getMulterOptions({
+        destination: 'src/documents/assets',
         allowedExtensions: ['.pdf'],
-        allowedSize: 5 * 1024 * 1024,
+        allowedSize: 10 * 1024 * 1024,
       }),
     ),
   )
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    type: CreateDocumentDto,
-    schema: {
-      type: 'object',
-      properties: {
-        file: { type: 'string', format: 'binary' },
-      },
-    },
-  })
-  async insertDocument(@UploadedFile() file: Express.Multer.File) {
+  async insertDocument(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() data: CreateDocumentDto,
+  ) {
     // TODO: Apply for all file type
     // TODO: check duplicate file name in all service
-    let data: CreateDocumentDto;
-    data.doc_type = 1;
-    data.doc_name = file.filename;
+    // let data: CreateDocumentDto;
+
+    console.log(file);
+    data.doc_name = file.path;
     return this.documentsService.createDocument(data);
   }
-  @UseGuards(CookieAuthGuard)
-  @Roles(UserRole.admin)
+
+  // @Roles(UserRole.admin)
   @Get()
-  async getAllDocuments(@Req() req: LogInRequest) {
+  // @UseGuards(UserCookieGuard)
+  async getAllDocuments() {
+    console.log('FROM: DOCUMENTS');
     return this.documentsService.getAllDocuments();
   }
 

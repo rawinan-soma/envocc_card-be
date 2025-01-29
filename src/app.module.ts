@@ -4,8 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AdminsModule } from './admins/admins.module';
-import { UserAuthModule } from './user-auth/user-auth.module';
-import { AdminAuthModule } from './admin-auth/admin-auth.module';
+
 import { RequestsModule } from './requests/requests.module';
 import { MembersModule } from './members/members.module';
 import { DocumentsModule } from './documents/documents.module';
@@ -25,10 +24,14 @@ import { PositionsModule } from './positions/positions.module';
 import { PositionLvlsModule } from './position-lvls/position-lvls.module';
 import { SignPersonModule } from './sign-person/sign-person.module';
 import { FilesModule } from './files/files.module';
+import { PassportModule } from '@nestjs/passport';
 // import { QueueModule } from './queue/queue.module';
+import { UserAuthModule } from './user-auth/user-auth.module';
+import { AdminAuthModule } from './admin-auth/admin-auth.module';
 
 @Module({
   imports: [
+    PassportModule.register({ session: true }),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         MYSQL_HOST: Joi.string().required(),
@@ -41,8 +44,7 @@ import { FilesModule } from './files/files.module';
     }),
     UsersModule,
     AdminsModule,
-    UserAuthModule,
-    AdminAuthModule,
+
     RequestsModule,
     MembersModule,
     DocumentsModule,
@@ -60,6 +62,8 @@ import { FilesModule } from './files/files.module';
     PositionLvlsModule,
     SignPersonModule,
     FilesModule,
+    UserAuthModule,
+    AdminAuthModule,
     // QueueModule,
   ],
   controllers: [AppController],

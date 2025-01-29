@@ -16,7 +16,7 @@ import { diskStorage } from 'multer';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { randomFilename } from 'src/common/randomFilename';
-import LogInRequest from 'src/user-auth/log-in-request.interface';
+// import LogInRequest from 'src/user-auth/log-in-request.interface';
 
 @Controller('envcard')
 export class EnvcardController {
@@ -37,7 +37,7 @@ export class EnvcardController {
   async uploadEnvCardFile(
     @Body() data: CreateEnvcardDto,
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: LogInRequest,
+    // @Req() req: LogInRequest,
   ) {
     // FIXME: user after allocate authen guard
     // let data: CreateEnvcardDto;
@@ -46,13 +46,13 @@ export class EnvcardController {
     return this.envcardService.createCardFile(data);
   }
 
-  @Get(':user')
-  async getEnvCard(@Param('user') user: number) {
-    return this.envcardService.getCardFile(user);
+  @Get(':user_id')
+  async getEnvCard(@Param('user_id') user_id: number) {
+    return this.envcardService.getCardFile(user_id);
   }
 
-  @Delete(':user')
-  async deleteEnvCard(@Param('user') user: number) {
-    return this.envcardService.deleteCardFile(user);
+  @Delete(':user_id')
+  async deleteEnvCard(@Param('user_id') user_id: number) {
+    return this.envcardService.deleteCardFile(user_id);
   }
 }
