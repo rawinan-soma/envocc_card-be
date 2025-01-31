@@ -18,35 +18,39 @@ import { diskStorage } from 'multer';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 // import LogInRequest from 'src/admin-auth/log-in-request.interface';
 import { randomFilename } from 'src/common/randomFilename';
+import { MinioService } from 'src/minio/minio.service';
+import { FilesService } from 'src/files/files.service';
 
 @Controller('expsFile')
 export class ExpsfileController {
-  constructor(private readonly expsfileService: ExpsfileService) {}
+  constructor(
+    private readonly expsfileService: ExpsfileService,
+    private readonly minio: MinioService,
+  ) {}
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './assets',
+    FileInterceptor(
+      'expsFile',
+      new FilesService().getMulterOptions({
+        allowedExtensions: ['.pdf'],
+        allowedSize: 10 * 1024 * 1024,
       }),
-    }),
+    ),
   )
-  @ApiBody({
-    type: FileUploadDto,
-  })
-  @ApiConsumes('multipart/form-data')
   async uploadExpsFile(
     // @Req() req: LogInRequest,
     // FIXME: delete in prod
-    @Body()
-    data: CreateExpsfileDto,
-    @UploadedFile() file: Express.Multer.File,
+    // @Body()
+    // data: CreateExpsfileDto,
+    @UploadedFile()
+    file: Express.Multer.File,
   ) {
     // FIXME: use after allocate authen guard
-    // let data: CreateExpsfileDto;
-
-    data.exp_file = randomFilename();
-    // data.admin = req.user.admin_id;
+    let data: CreateExpsfileDto;
+    const fileUrl = await this.minio.uploadFileToBucket(file);
+    data.admin = 1;
+    data.exp_file = fileUrl;
 
     return this.expsfileService.createExpsFile(data);
   }

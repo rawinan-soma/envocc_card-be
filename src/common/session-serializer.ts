@@ -14,8 +14,16 @@ export class SessionSerializer extends PassportSerializer {
 
   serializeUser(user: any, done: CallableFunction) {
     // console.log('FROM Serializer', user);
-    console.log({ id: user.user_id || user.admin_id, role: user.role });
-    done(null, { id: user.user_id || user.admin_id, role: user.role });
+    console.log({
+      id: user.user_id || user.admin_id,
+      role: user.role,
+      level: user.level ? user.level : null,
+    });
+    done(null, {
+      id: user.user_id || user.admin_id,
+      role: user.role,
+      level: user.level ? user.level : null,
+    });
   }
 
   async deserializeUser(payload: any, done: CallableFunction) {

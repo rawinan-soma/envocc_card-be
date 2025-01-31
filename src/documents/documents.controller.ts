@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseGuards,
   Body,
+  Res,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -18,18 +19,22 @@ import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { FilesService } from 'src/files/files.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+import { MinioService } from 'src/minio/minio.service';
+import { Response } from 'express';
 // import { UserLocalCredentialGuard } from 'src/user-auth/user-local-credential.guard';
 
 @Controller('documents')
 export class DocumentsController {
-  constructor(private readonly documentsService: DocumentsService) {}
+  constructor(
+    private readonly documentsService: DocumentsService,
+    private readonly minioService: MinioService,
+  ) {}
 
   @Post()
   @UseInterceptors(
     FileInterceptor(
-      'file',
+      'document',
       new FilesService().getMulterOptions({
-        destination: 'src/documents/assets',
         allowedExtensions: ['.pdf'],
         allowedSize: 10 * 1024 * 1024,
       }),
@@ -43,8 +48,8 @@ export class DocumentsController {
     // TODO: check duplicate file name in all service
     // let data: CreateDocumentDto;
 
-    console.log(file);
-    data.doc_name = file.path;
+    const fileUrl = await this.minioService.uploadFileToBucket(file);
+    data.doc_name = fileUrl;
     return this.documentsService.createDocument(data);
   }
 
@@ -52,13 +57,15 @@ export class DocumentsController {
   @Get()
   // @UseGuards(UserCookieGuard)
   async getAllDocuments() {
-    console.log('FROM: DOCUMENTS');
     return this.documentsService.getAllDocuments();
   }
 
   @Get(':doc_id')
   async getOneDocument(@Param('doc_id') doc_id: number) {
-    return this.documentsService.getOneDocument(doc_id);
+    const fileName = (await this.documentsService.getOneDocument(doc_id))
+      .doc_name;
+
+    return this.minioService.getPresignedUrl(fileName);
   }
 
   @Delete(':doc_id')

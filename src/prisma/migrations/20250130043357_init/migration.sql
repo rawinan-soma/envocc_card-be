@@ -260,7 +260,7 @@ CREATE TABLE `resetpass` (
 
 -- CreateTable
 CREATE TABLE `seals` (
-    `seal_id` INTEGER NOT NULL,
+    `seal_id` INTEGER NOT NULL AUTO_INCREMENT,
     `seal_pix` VARCHAR(255) NULL,
 
     UNIQUE INDEX `seal_id`(`seal_id`),
@@ -422,7 +422,7 @@ ALTER TABLE `resetpass` ADD CONSTRAINT `resetpass_ibfk_2` FOREIGN KEY (`user_ema
 ALTER TABLE `sign_persons` ADD CONSTRAINT `sign_persons_ibfk_1` FOREIGN KEY (`department`) REFERENCES `departments`(`department_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE `users` ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`institution`) REFERENCES `institutions`(`institution_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `users` ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`institution`) REFERENCES `institutions`(`institution_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `users` ADD CONSTRAINT `users_position_fkey` FOREIGN KEY (`position`) REFERENCES `positions`(`position_id`) ON DELETE RESTRICT ON UPDATE CASCADE;

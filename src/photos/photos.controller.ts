@@ -13,35 +13,34 @@ import { CreatePhotoDto } from './dto/create-photo.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { FilesService } from 'src/files/files.service';
+import { MinioService } from 'src/minio/minio.service';
 
 @Controller('photos')
 export class PhotosController {
-  constructor(private readonly photosService: PhotosService) {}
+  constructor(
+    private readonly photosService: PhotosService,
+    private readonly minio: MinioService,
+  ) {}
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './assets',
+    FileInterceptor(
+      'photo',
+      new FilesService().getMulterOptions({
+        allowedExtensions: ['.pdf'],
+        allowedSize: 10 * 1024 * 1024,
       }),
-    }),
+    ),
   )
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    type: CreatePhotoDto,
-    schema: {
-      type: 'object',
-      properties: {
-        file: { type: 'string', format: 'binary' },
-      },
-    },
-  })
   async insertPhoto(
-    @Body() data: CreatePhotoDto,
+    // @Body() data: CreatePhotoDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    data.file = file.originalname;
-
+    let data: CreatePhotoDto;
+    const fileUrl = await this.minio.uploadFileToBucket(file);
+    data.user = 1;
+    data.photo = fileUrl;
     return this.photosService.createPhoto(data);
   }
 

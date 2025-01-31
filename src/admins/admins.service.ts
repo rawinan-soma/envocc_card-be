@@ -10,6 +10,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 import { admins } from '@prisma/client';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AdminsService {
@@ -68,8 +69,10 @@ export class AdminsService {
         throw new BadRequestException('User already existed');
       }
 
+      const hashedPassword = await bcrypt.hash(data.password, 10);
+
       return await this.prismaService.admins.create({
-        data: data,
+        data: { password: hashedPassword, ...data },
       });
     } catch (error: any) {
       this.logger.error('ERROR: createUser');

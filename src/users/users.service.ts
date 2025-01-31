@@ -12,6 +12,7 @@ import { Prisma, users } from '@prisma/client';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { CreateMainDto } from './dto/create-main.dto';
 import { ExperiencesService } from 'src/experiences/experiences.service';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -110,6 +111,8 @@ export class UsersService {
             orderBy: { end_date: 'desc' },
           },
           requests: { select: { request_status: true } },
+          positions: { select: { position_name: true } },
+          position_lvs: { select: { position_lv_name: true } },
         },
         where: adminLevelFilter,
         // where: {
@@ -319,6 +322,9 @@ export class UsersService {
           this.expService.calculateExpYears(item.exp_ldate, item.exp_fdate),
         );
       });
+
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      user.password = hashedPassword;
       // return { user, exp };
       return await this.prismaService.users.create({
         data: {

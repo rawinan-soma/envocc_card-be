@@ -21,8 +21,8 @@ export class UsersController {
   @Get()
   async getUsers(
     // @Req() req: LogInRequest,
-    // @Query('adminLevel') adminLevel: number,
-    // @Query('adminInst') adminInst: number,
+    @Query('adminLevel') adminLevel: number,
+    @Query('adminInst') adminInst: number,
     @Query('page') page: string,
     @Query('status') status: string,
     @Query('fname_th') fname_th?: string,
@@ -33,8 +33,8 @@ export class UsersController {
       page == '0' || !page || page.match(/[a-zA-Z]/) ? 1 : parseInt(page, 10);
     // const pageNumber = parseInt(page, 10) || 1;
 
-    const adminLevel = 1;
-    const adminInst = 1;
+    // const adminLevel = 1;
+    // const adminInst = 1;
 
     // const adminLevel = req.user.level;
     // const adminInst = req.user.institution;

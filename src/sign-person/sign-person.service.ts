@@ -37,7 +37,16 @@ export class SignPersonService {
       }
 
       return await this.prisma.sign_persons.create({
-        data: { sign_person_active: true, ...data },
+        data: {
+          sign_person_pname: data.sign_person_pname,
+          sign_person_active: true,
+          sign_person_lname: data.sign_person_lname,
+          sign_person_name: data.sign_person_name,
+          signature_pix: data.signature_pix,
+          position: data.position,
+          admins: { connect: { admin_id: data.update_admin } },
+          departments: { connect: { department_id: data.department } },
+        },
       });
     } catch (error: any) {
       this.logger.error('ERROR: addSignPerson');

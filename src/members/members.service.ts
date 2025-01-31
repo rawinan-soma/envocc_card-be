@@ -209,4 +209,47 @@ export class MembersService {
       data: { start_date: startDate, end_date: endDate },
     });
   }
+
+  async transactionCreateMember(data: CreateMemberDto) {
+    try {
+      return this.prismaService.$transaction(async (tx) => {
+        const initPassword = Math.floor(
+          10000000 + Math.random() * 90000000,
+        ).toString();
+
+        const initQRCode = Math.floor(
+          10000000 + Math.random() * 90000000,
+        ).toString();
+
+        const existedMember = await tx.members.findFirst({
+          where: { user: data.user },
+        });
+
+        const latestMember = await tx.members.findFirst({
+          orderBy: { member_no: 'desc' },
+        });
+
+        let nextMemberNo: number;
+        if (!latestMember) {
+          nextMemberNo = 1;
+        } else if (existedMember) {
+          nextMemberNo = existedMember.member_no;
+        } else {
+          nextMemberNo = latestMember.member_no + 1;
+        }
+
+        return await tx.members.create({
+          data: {
+            member_no: nextMemberNo,
+            qrcode: initQRCode,
+            qrcode_pass: initPassword,
+            ...data,
+          },
+        });
+      });
+    } catch (error) {
+      this.logger.error(error);
+      serviceErrorHandler(error);
+    }
+  }
 }

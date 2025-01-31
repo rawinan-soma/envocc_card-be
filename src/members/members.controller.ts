@@ -28,7 +28,7 @@ export class MembersController {
 
   @Post()
   async createMember(@Body() newMember: CreateMemberDto) {
-    return this.membersService.createMember(newMember);
+    return this.membersService.transactionCreateMember(newMember);
   }
 
   @Patch('users/:user_id/deactivation')

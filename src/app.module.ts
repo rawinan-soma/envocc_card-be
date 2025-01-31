@@ -25,9 +25,10 @@ import { PositionLvlsModule } from './position-lvls/position-lvls.module';
 import { SignPersonModule } from './sign-person/sign-person.module';
 import { FilesModule } from './files/files.module';
 import { PassportModule } from '@nestjs/passport';
-// import { QueueModule } from './queue/queue.module';
 import { UserAuthModule } from './user-auth/user-auth.module';
 import { AdminAuthModule } from './admin-auth/admin-auth.module';
+import { MinioModule } from './minio/minio.module';
+import { SealsModule } from './seals/seals.module';
 
 @Module({
   imports: [
@@ -44,7 +45,6 @@ import { AdminAuthModule } from './admin-auth/admin-auth.module';
     }),
     UsersModule,
     AdminsModule,
-
     RequestsModule,
     MembersModule,
     DocumentsModule,
@@ -64,7 +64,8 @@ import { AdminAuthModule } from './admin-auth/admin-auth.module';
     FilesModule,
     UserAuthModule,
     AdminAuthModule,
-    // QueueModule,
+    MinioModule,
+    SealsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

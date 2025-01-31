@@ -16,33 +16,39 @@ import { diskStorage } from 'multer';
 import { FileUploadDto } from 'src/common/file-upload.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { randomFilename } from 'src/common/randomFilename';
+import { FilesService } from 'src/files/files.service';
+import { MinioService } from 'src/minio/minio.service';
 // import LogInRequest from 'src/user-auth/log-in-request.interface';
 
 @Controller('envcard')
 export class EnvcardController {
-  constructor(private readonly envcardService: EnvcardService) {}
+  constructor(
+    private readonly envcardService: EnvcardService,
+    private readonly minioService: MinioService,
+  ) {}
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './assets',
+    FileInterceptor(
+      'envcard',
+      new FilesService().getMulterOptions({
+        allowedExtensions: ['.pdf'],
+        allowedSize: 10 * 1024 * 1024,
       }),
-    }),
+    ),
   )
-  @ApiBody({
-    type: FileUploadDto,
-  })
-  @ApiConsumes('multipart/form-data')
   async uploadEnvCardFile(
-    @Body() data: CreateEnvcardDto,
+    // @Body() data: CreateEnvcardDto,
     @UploadedFile() file: Express.Multer.File,
     // @Req() req: LogInRequest,
   ) {
     // FIXME: user after allocate authen guard
-    // let data: CreateEnvcardDto;
+    let data: CreateEnvcardDto;
     // data.user = req.user.user_id;
-    data.file_card_name = randomFilename();
+    const fileUrl = await this.minioService.uploadFileToBucket(file);
+
+    data.user = 1; // example user
+    data.file_card_name = fileUrl;
     return this.envcardService.createCardFile(data);
   }
 

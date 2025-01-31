@@ -27,21 +27,23 @@ model access_levels {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model admins {
-  admin_id          Int                 @id @unique(map: "admin_id") @default(autoincrement())
-  role              String              @default("admin")
-  username          String              @unique @db.VarChar(255)
-  password          String              @db.VarChar(255)
-  institution       Int
-  level             Int
-  pname             String              @db.VarChar(255)
-  fname             String              @db.VarChar(255)
-  lname             String              @db.VarChar(255)
-  private_number    String              @db.VarChar(255)
-  work_number       String
-  email             String              @unique @db.VarChar(255)
-  position          Int
-  position_lv       Int
-  create_date       DateTime            @default(now()) @db.DateTime(0)
+  admin_id       Int      @id @unique(map: "admin_id") @default(autoincrement())
+  role           String   @default("admin")
+  username       String   @unique @db.VarChar(255)
+  password       String   @db.VarChar(255)
+  institution    Int
+  level          Int
+  pname          String   @db.VarChar(255)
+  fname          String   @db.VarChar(255)
+  lname          String   @db.VarChar(255)
+  private_number String   @db.VarChar(255)
+  work_number    String
+  email          String   @unique @db.VarChar(255)
+  position       Int
+  position_lv    Int
+  create_date    DateTime @default(now()) @db.DateTime(0)
+
+  sign_persons      sign_persons[]
   access_levels     access_levels       @relation(fields: [level], references: [level_id], onDelete: NoAction, onUpdate: NoAction, map: "admins_ibfk_1")
   institutions      institutions        @relation(fields: [institution], references: [institution_id], onDelete: NoAction, onUpdate: NoAction, map: "admins_ibfk_2")
   experiences_files experiences_files[]
@@ -253,22 +255,28 @@ model resetpass {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model seals {
-  seal_id     Int          @id @unique(map: "seal_id")
-  seal_pix    String?      @unique @db.VarChar(255)
+  seal_id      Int      @id @unique(map: "seal_id") @default(autoincrement())
+  seal_pix     String?  @unique @db.VarChar(255)
+  add_date     DateTime @default(now()) @db.DateTime(0)
+  update_admin Int
+
   departments departments?
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model sign_persons {
-  sign_person_id     Int          @id @unique(map: "sign_person_id") @default(autoincrement())
-  sign_person_pname  String?      @db.VarChar(100)
-  sign_person_name   String?      @db.VarChar(255)
-  sign_person_lname  String?      @db.VarChar(255)
-  signature_pix      String?      @unique @db.VarChar(255)
+  sign_person_id     Int         @id @unique(map: "sign_person_id") @default(autoincrement())
+  sign_person_pname  String      @db.VarChar(100)
+  sign_person_name   String      @db.VarChar(255)
+  sign_person_lname  String      @db.VarChar(255)
+  signature_pix      String      @unique @db.VarChar(255)
   department         Int
-  position           String?      @db.VarChar(255)
+  position           String      @db.VarChar(255)
   sign_person_active Boolean
-  departments        departments? @relation(fields: [department], references: [department_id], onDelete: NoAction, onUpdate: NoAction, map: "sign_persons_ibfk_1")
+  date_update        DateTime    @default(now()) @db.DateTime(0)
+  update_admin       Int
+  admins             admins      @relation(fields: [update_admin], references: [admin_id])
+  departments        departments @relation(fields: [department], references: [department_id], onDelete: NoAction, onUpdate: NoAction, map: "sign_persons_ibfk_1")
 
   @@index([department], map: "department")
 }

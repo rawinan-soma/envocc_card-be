@@ -11,11 +11,14 @@ export class CreateSignPersonDto {
   sign_person_lname: string;
 
   @IsString()
-  signature_pix?: string;
-
-  @IsNumber()
-  department: number;
+  signature_pix: string;
 
   @IsString()
   position: string;
+
+  @IsNumber()
+  update_admin: number;
+
+  @IsNumber()
+  department: number;
 }
