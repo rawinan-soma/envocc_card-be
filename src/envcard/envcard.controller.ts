@@ -48,17 +48,22 @@ export class EnvcardController {
     const fileUrl = await this.minioService.uploadFileToBucket(file);
 
     data.user = 1; // example user
-    data.file_card_name = fileUrl;
+    data.file_card_name = fileUrl.fileName;
+    data.url = fileUrl.url;
     return this.envcardService.createCardFile(data);
   }
 
   @Get(':user_id')
   async getEnvCard(@Param('user_id') user_id: number) {
-    return this.envcardService.getCardFile(user_id);
+    return (await this.envcardService.getCardFile(user_id)).url;
   }
 
   @Delete(':user_id')
   async deleteEnvCard(@Param('user_id') user_id: number) {
-    return this.envcardService.deleteCardFile(user_id);
+    const file = await this.envcardService.getCardFile(user_id);
+    await this.minioService.deleteDocument(file.file_card_name);
+    await this.envcardService.deleteCardFile(user_id);
+
+    return { msg: 'deleted' };
   }
 }

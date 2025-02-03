@@ -48,28 +48,34 @@ export class DocumentsController {
     // TODO: check duplicate file name in all service
     // let data: CreateDocumentDto;
 
-    const fileUrl = await this.minioService.uploadFileToBucket(file);
-    data.doc_name = fileUrl;
+    const uploadedFile = await this.minioService.uploadFileToBucket(file);
+    data.url = uploadedFile.url;
+    data.doc_name = uploadedFile.fileName;
     return this.documentsService.createDocument(data);
   }
 
   // @Roles(UserRole.admin)
   @Get()
   // @UseGuards(UserCookieGuard)
+  // admin
   async getAllDocuments() {
     return this.documentsService.getAllDocuments();
   }
 
   @Get(':doc_id')
   async getOneDocument(@Param('doc_id') doc_id: number) {
-    const fileName = (await this.documentsService.getOneDocument(doc_id))
-      .doc_name;
+    const fileName = (await this.documentsService.getOneDocument(doc_id)).url;
 
-    return this.minioService.getPresignedUrl(fileName);
+    return fileName;
   }
 
+  // admin
   @Delete(':doc_id')
   async deleteDocument(@Param('doc_id') doc_id: number) {
-    return this.documentsService.deleteDocument(doc_id);
+    const file = await this.documentsService.getOneDocument(doc_id);
+    await this.documentsService.deleteDocument(file.doc_id);
+    await this.minioService.deleteDocument(file.doc_name);
+
+    return { msg: 'deleted' };
   }
 }

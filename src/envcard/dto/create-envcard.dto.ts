@@ -6,4 +6,6 @@ export class CreateEnvcardDto {
 
   @IsString()
   file_card_name: string;
+
+  url: string;
 }

@@ -7,6 +7,7 @@ import {
   Req,
   Get,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { GovcardService } from './govcard.service';
 import { CreateGovcardDto } from './dto/create-govcard.dto';
@@ -46,13 +47,21 @@ export class GovcardController {
     // FIXME: use after authen guard
     let data: CreateGovcardDto;
     data.user = 1;
-    data.file_name = fileUrl;
+    data.file_name = fileUrl.fileName;
+    data.url = fileUrl.url;
 
     return this.govcardService.createGovCard(data);
   }
 
   @Get(':user')
   async getGovCard(@Param() user: number) {
-    return this.govcardService.getGovCardfile(user);
+    return (await this.govcardService.getGovCardfile(user)).url;
+  }
+
+  @Delete(':user')
+  async deleteGovCard(@Param() user_id: number) {
+    const file = await this.govcardService.getGovCardfile(user_id);
+    await this.govcardService.deleteGovCard(user_id);
+    await this.minio.deleteDocument(file.file_name);
   }
 }

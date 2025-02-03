@@ -21,4 +21,6 @@ export class CreateSignPersonDto {
 
   @IsNumber()
   department: number;
+
+  url: string;
 }

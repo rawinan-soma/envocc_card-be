@@ -50,20 +50,26 @@ export class ExpsfileController {
     let data: CreateExpsfileDto;
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.admin = 1;
-    data.exp_file = fileUrl;
+    data.exp_file = fileUrl.fileName;
+    data.url = fileUrl.url;
 
     return this.expsfileService.createExpsFile(data);
   }
 
   @Get(':admin')
   async getExpsFile(@Param('admin') admin: number) {
-    return this.expsfileService.getAllFilesOneAdmins(admin);
+    return await this.expsfileService.getAllFilesOneAdmins(admin);
   }
 
   @Delete(':experiences_file_id')
   async deleteExpsFile(
     @Param('experiences_file_id') experiences_file_id: number,
   ) {
-    return this.expsfileService.deleteExpsFile(experiences_file_id);
+    const file =
+      await this.expsfileService.getExpsFileById(experiences_file_id);
+    await this.minio.deleteDocument(file.exp_file);
+    await this.expsfileService.deleteExpsFile(experiences_file_id);
+
+    return { msg: 'deleted' };
   }
 }

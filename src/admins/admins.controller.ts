@@ -18,12 +18,13 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  // @UseGuards(CookieAuthGuard)
+  // admin
   @Get()
   async getAdmin() {
     return this.adminsService.getAllAdmins();
   }
 
+  // admin
   @Get('query')
   async getAdminByParams(
     @Query('username') username: string,
@@ -32,11 +33,13 @@ export class AdminsController {
     return this.adminsService.getAdminByParams(username, email);
   }
 
+  // admin
   @Post()
   async createAdmin(@Body() newAdmin: CreateAdminDto) {
     return this.adminsService.createAdmin(newAdmin);
   }
 
+  // admin
   @Patch(':username')
   async UpdateUserDto(
     @Param('username') username: string,
@@ -45,6 +48,7 @@ export class AdminsController {
     return this.adminsService.updateAdmin(username, updatedAdmin);
   }
 
+  // admin
   @Delete(':username')
   async deleteUser(@Param('username') username: string) {
     return this.adminsService.deleteAdmin(username);

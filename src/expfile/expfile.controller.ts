@@ -47,18 +47,21 @@ export class ExpfileController {
     let data: CreateExpfileDto;
     const fileUrl = await this.minio.uploadFileToBucket(file);
     // data.user = req.user.user_id;
-    data.file_name = fileUrl;
+    data.file_name = fileUrl.fileName;
+    data.url = fileUrl.url;
     data.user = 1;
     return this.expfileService.createExpFile(data);
   }
 
   @Get(':user')
   async getEnvCard(@Param('user') user: number) {
-    return this.expfileService.getExpFile(user);
+    return (await this.expfileService.getExpFile(user)).url;
   }
 
   @Delete(':user')
   async deleteEnvCard(@Param('user') user: number) {
-    return this.expfileService.deleteExpFile(user);
+    const file = await this.expfileService.getExpFile(user);
+    await this.expfileService.deleteExpFile(user);
+    await this.minio.deleteDocument(file.file_name);
   }
 }

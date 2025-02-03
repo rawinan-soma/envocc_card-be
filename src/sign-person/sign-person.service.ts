@@ -46,6 +46,7 @@ export class SignPersonService {
           position: data.position,
           admins: { connect: { admin_id: data.update_admin } },
           departments: { connect: { department_id: data.department } },
+          url: data.url,
         },
       });
     } catch (error: any) {

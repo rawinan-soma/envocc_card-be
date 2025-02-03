@@ -75,6 +75,7 @@ model documents {
   doc_id      Int       @id @unique(map: "doc_id") @default(autoincrement())
   doc_type    Int?
   doc_name    String?   @unique @db.VarChar(255)
+  url         String?
   create_date DateTime? @default(now()) @db.DateTime(0)
 }
 
@@ -83,6 +84,7 @@ model envocc_card_files {
   envocc_card_file_id Int       @id @unique(map: "envocc_card_file_id") @default(autoincrement())
   user                Int?
   file_card_name      String?   @unique @db.VarChar(255)
+  url                 String?
   create_date         DateTime? @default(now()) @db.DateTime(0)
   users               users?    @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "envocc_card_files_ibfk_1")
 
@@ -103,6 +105,7 @@ model exp_files {
   exp_file_id Int       @id @unique(map: "exp_file_id") @default(autoincrement())
   user        Int?
   file_name   String?   @unique @db.VarChar(255)
+  url         String?
   create_date DateTime? @default(now()) @db.DateTime(0)
   users       users?    @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "exp_files_ibfk_1")
 
@@ -131,6 +134,7 @@ model experiences_files {
   experience_file_id Int       @id @unique(map: "experience_file_id") @default(autoincrement())
   admin              Int?
   exp_file           String?   @unique @db.VarChar(255)
+  url                String?
   create_date        DateTime? @default(now()) @db.DateTime(0)
   admins             admins?   @relation(fields: [admin], references: [admin_id], onDelete: NoAction, onUpdate: NoAction, map: "experiences_files_ibfk_1")
 
@@ -142,6 +146,7 @@ model gov_card_files {
   gov_card_file_id Int       @id @unique(map: "gov_card_file_id") @default(autoincrement())
   user             Int?
   file_name        String?   @unique @db.VarChar(255)
+  url              String?
   create_date      DateTime? @default(now()) @db.DateTime(0)
   users            users?    @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "gov_card_files_ibfk_1")
 
@@ -196,6 +201,7 @@ model photos {
   photo_id    Int       @id @unique(map: "photo_id") @default(autoincrement())
   user        Int?
   photo       String?   @unique @db.VarChar(255)
+  url         String?
   create_date DateTime? @default(now()) @db.DateTime(0)
   users       users?    @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "photos_ibfk_1")
 
@@ -207,6 +213,7 @@ model request_files {
   request_file_id Int       @id @unique(map: "request_file_id") @default(autoincrement())
   user            Int?
   file_name       String?   @unique @db.VarChar(255)
+  url             String?
   create_date     DateTime? @default(now()) @db.DateTime(0)
   users           users?    @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "request_files_ibfk_1")
 
@@ -257,6 +264,7 @@ model resetpass {
 model seals {
   seal_id      Int      @id @unique(map: "seal_id") @default(autoincrement())
   seal_pix     String?  @unique @db.VarChar(255)
+  url          String?
   add_date     DateTime @default(now()) @db.DateTime(0)
   update_admin Int
 
@@ -270,6 +278,7 @@ model sign_persons {
   sign_person_name   String      @db.VarChar(255)
   sign_person_lname  String      @db.VarChar(255)
   signature_pix      String      @unique @db.VarChar(255)
+  url                String?
   department         Int
   position           String      @db.VarChar(255)
   sign_person_active Boolean

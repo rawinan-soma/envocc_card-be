@@ -6,4 +6,6 @@ export class CreateSealDto {
 
   @IsString()
   seal_pix: string;
+
+  url: string;
 }

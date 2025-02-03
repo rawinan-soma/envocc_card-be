@@ -8,4 +8,6 @@ export class CreateExpsfileDto {
 
   @IsString()
   exp_file?: string;
+
+  url: string;
 }

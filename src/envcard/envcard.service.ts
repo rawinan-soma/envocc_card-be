@@ -35,8 +35,6 @@ export class EnvcardService {
     try {
       const selectedFile = await this.getCardFile(user);
 
-      fs.unlinkSync(selectedFile.file_card_name);
-
       return await this.prismaService.envocc_card_files.delete({
         where: { envocc_card_file_id: selectedFile.envocc_card_file_id },
       });

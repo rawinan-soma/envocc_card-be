@@ -6,4 +6,6 @@ export class CreateGovcardDto {
 
   @IsString()
   file_name: string;
+
+  url: string;
 }

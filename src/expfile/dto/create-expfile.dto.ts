@@ -6,4 +6,6 @@ export class CreateExpfileDto {
 
   @IsString()
   file_name: string;
+
+  url: string;
 }

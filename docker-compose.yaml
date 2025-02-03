@@ -4,6 +4,7 @@ networks:
 volumes:
   envcard-mysql-data:
   envcard-mysql-log:
+  minio_data:
 services:
   # TODO: Link volume ของไฟล์ Assets ทุกตัวก่อน Prod
   envcard-mysql:
@@ -117,4 +118,4 @@ services:
       - minio_data:/data
     command: server --console-address ":9001" /data
     networks:
-      - test-network
+      - envcard-network

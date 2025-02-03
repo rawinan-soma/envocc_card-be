@@ -35,8 +35,6 @@ export class GovcardService {
     try {
       const selectedFile = await this.getGovCardfile(user);
 
-      fs.unlinkSync(selectedFile.file_name);
-
       return await this.prismaService.gov_card_files.delete({
         where: { gov_card_file_id: selectedFile.gov_card_file_id },
       });

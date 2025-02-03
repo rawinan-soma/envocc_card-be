@@ -31,6 +31,23 @@ export class ExpsfileService {
     }
   }
 
+  async getExpsFileById(file_id: number) {
+    try {
+      const expsFile = await this.prismaService.experiences_files.findUnique({
+        where: { experience_file_id: file_id },
+      });
+
+      if (!expsFile) {
+        throw new NotFoundException('Not found experiences file for this id');
+      }
+
+      return expsFile;
+    } catch (error) {
+      this.logger.error(error);
+      serviceErrorHandler(error);
+    }
+  }
+
   async createExpsFile(data: CreateExpsfileDto) {
     try {
       const existingFile = await this.prismaService.experiences_files.findFirst(
@@ -74,8 +91,6 @@ export class ExpsfileService {
       const selectedFile = await this.prismaService.experiences_files.findFirst(
         { where: { experience_file_id: experience_file_id } },
       );
-
-      fs.unlinkSync(selectedFile.exp_file);
 
       return await this.prismaService.experiences_files.delete({
         where: { experience_file_id: selectedFile.experience_file_id },

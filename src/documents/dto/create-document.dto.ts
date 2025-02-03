@@ -7,4 +7,5 @@ export class CreateDocumentDto {
   doc_type: number;
 
   doc_name: string;
+  url: string;
 }

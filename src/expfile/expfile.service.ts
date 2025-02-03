@@ -1,6 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as fs from 'fs';
 import { CreateExpfileDto } from './dto/create-expfile.dto';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { randomFilename } from 'src/common/randomFilename';
@@ -33,8 +32,6 @@ export class ExpfileService {
   async deleteExpFile(user: number) {
     try {
       const selectedFile = await this.getExpFile(user);
-
-      fs.unlinkSync(selectedFile.file_name);
 
       return await this.prismaService.exp_files.delete({
         where: { exp_file_id: selectedFile.exp_file_id },

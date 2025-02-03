@@ -14,7 +14,7 @@ export class MinioService {
     this.bucketName = bucketName;
 
     this.client = new Minio.Client({
-      endPoint: 'localhost',
+      endPoint: 'minio',
       port: 9000,
       useSSL: false,
       accessKey: 'minioadmin',
@@ -31,22 +31,31 @@ export class MinioService {
       await this.client.makeBucket(this.bucketName);
       console.log(`${this.bucketName} created!!`);
     }
+
+    this.setPublic();
   }
 
   async uploadFileToBucket(file: Express.Multer.File) {
-    // const fileStream = fs.createReadStream(file.path);
-    const suffix: string = Date.now() + '-' + randomFilename();
-    const fileName = `${suffix}${extname(file.originalname)}`;
+    try {
+      // const fileStream = fs.createReadStream(file.path);
+      const suffix: string = Date.now() + '-' + randomFilename();
+      const fileName = `${suffix}${extname(file.originalname)}`;
 
-    await this.client.putObject(
-      this.bucketName,
-      fileName,
-      file.buffer,
-      file.size,
-      { 'Content-Type': file.mimetype },
-    );
-    // return `localhost:9000/${this.bucketName}/${fileName}`;
-    return fileName;
+      await this.client.putObject(
+        this.bucketName,
+        fileName,
+        file.buffer,
+        file.size,
+        { 'Content-Type': file.mimetype },
+      );
+      return {
+        url: `localhost:9000/${this.bucketName}/${fileName}`,
+        fileName: fileName,
+      };
+      // return fileName;
+    } catch (error) {
+      serviceErrorHandler(error);
+    }
   }
 
   async getFileFromBucket(filename: string) {
@@ -62,6 +71,36 @@ export class MinioService {
       );
     } catch (error) {
       serviceErrorHandler(error);
+    }
+  }
+
+  async deleteDocument(fileName: string) {
+    try {
+      return await this.client.removeObject(this.bucketName, fileName);
+    } catch (error) {
+      serviceErrorHandler(error);
+    }
+  }
+
+  async setPublic() {
+    try {
+      const policy = {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Effect: 'Allow',
+            Principal: { AWS: ['*'] },
+            Action: ['s3:GetObject'],
+            Resource: [`arn:aws:s3:::${this.bucketName}/*`],
+          },
+        ],
+      };
+      await this.client.setBucketPolicy(
+        this.bucketName,
+        JSON.stringify(policy),
+      );
+    } catch (error) {
+      console.log(error);
     }
   }
 }

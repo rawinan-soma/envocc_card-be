@@ -40,17 +40,20 @@ export class PhotosController {
     let data: CreatePhotoDto;
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.user = 1;
-    data.photo = fileUrl;
+    data.photo = fileUrl.fileName;
+    data.url = fileUrl.url;
     return this.photosService.createPhoto(data);
   }
 
   @Get(':user_id')
   async getPhotoByUser(@Param('user_id') user_id: number) {
-    return this.photosService.getPhotoByUser(user_id);
+    return (await this.photosService.getPhotoByUser(user_id)).url;
   }
 
-  @Delete(':photo_id')
-  async deletePhoto(@Param('photo_id') photo_id: number) {
-    return this.photosService.deletePhoto(photo_id);
+  @Delete(':user_id')
+  async deletePhoto(@Param() user_id: number) {
+    const file = await this.photosService.getPhotoByUser(user_id);
+    await this.photosService.deletePhoto(file.photo_id);
+    await this.minio.deleteDocument(file.photo);
   }
 }

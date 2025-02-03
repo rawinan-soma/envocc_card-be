@@ -30,7 +30,8 @@ export class SealsController {
   async insertSeal(@UploadedFile() file: Express.Multer.File) {
     let data: CreateSealDto;
     const fileUrl = await this.minio.uploadFileToBucket(file);
-    data.seal_pix = fileUrl;
+    data.seal_pix = fileUrl.fileName;
+    data.url = fileUrl.url;
     data.update_admin = 1;
 
     return this.sealsService.createSeal(data);

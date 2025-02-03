@@ -2,9 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import * as fs from 'fs';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
-import { randomFilename } from 'src/common/randomFilename';
 
 @Injectable()
 export class DocumentsService {
@@ -36,8 +34,10 @@ export class DocumentsService {
       const document = await this.prismaService.documents.findUnique({
         where: { doc_id: doc_id },
         select: {
+          doc_id: true,
           doc_type: true,
           doc_name: true,
+          url: true,
           // doc_file: true,
         },
       });
@@ -73,8 +73,6 @@ export class DocumentsService {
       if (!existedDocument) {
         throw new NotFoundException('This document did not occurred');
       }
-
-      fs.unlinkSync(existedDocument.doc_name);
 
       return await this.prismaService.documents.delete({
         where: { doc_id: doc_id },

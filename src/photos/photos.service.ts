@@ -51,8 +51,6 @@ export class PhotosService {
         throw new NotFoundException('This phot did not existed');
       }
 
-      fs.unlinkSync(existedPhoto.photo);
-
       return await this.prismaService.photos.delete({
         where: { photo_id: photo_id },
       });
