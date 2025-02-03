@@ -29,6 +29,7 @@ import { UserAuthModule } from './user-auth/user-auth.module';
 import { AdminAuthModule } from './admin-auth/admin-auth.module';
 import { MinioModule } from './minio/minio.module';
 import { SealsModule } from './seals/seals.module';
+import { RequestFileModule } from './request-file/request-file.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { SealsModule } from './seals/seals.module';
     AdminAuthModule,
     MinioModule,
     SealsModule,
+    RequestFileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -55,5 +55,7 @@ export class PhotosController {
     const file = await this.photosService.getPhotoByUser(user_id);
     await this.photosService.deletePhoto(file.photo_id);
     await this.minio.deleteDocument(file.photo);
+
+    return { msg: 'deleted' };
   }
 }

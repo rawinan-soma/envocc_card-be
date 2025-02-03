@@ -51,6 +51,7 @@ export class DocumentsController {
     const uploadedFile = await this.minioService.uploadFileToBucket(file);
     data.url = uploadedFile.url;
     data.doc_name = uploadedFile.fileName;
+    data.doc_file = data.doc_file;
     return this.documentsService.createDocument(data);
   }
 

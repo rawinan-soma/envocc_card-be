@@ -110,7 +110,10 @@ export class UsersService {
             select: { start_date: true, end_date: true },
             orderBy: { end_date: 'desc' },
           },
-          requests: { select: { request_status: true } },
+          requests: {
+            select: { request_status: true },
+            orderBy: { date_update: 'desc' },
+          },
           positions: { select: { position_name: true } },
           position_lvs: { select: { position_lv_name: true } },
         },

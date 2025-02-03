@@ -28,7 +28,6 @@ export class CreateAdminDto {
   private_number: string;
 
   @IsString()
-  @Matches(/^0[0-9]{8}$/, { message: 'Invalid work number' })
   work_number: string;
 
   @IsString()

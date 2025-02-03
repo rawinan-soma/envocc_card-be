@@ -2,7 +2,6 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
-import * as fs from 'fs';
 
 @Injectable()
 export class PhotosService {

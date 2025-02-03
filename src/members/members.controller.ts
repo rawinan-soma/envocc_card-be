@@ -48,4 +48,9 @@ export class MembersController {
   async getByQRCode(@Param() qrcode_no: string) {
     return this.membersService.getMemberByQrcode(qrcode_no);
   }
+
+  @Patch('startDate/:user_id')
+  async updateStartDate(@Param() user_id: number, @Body() startDate: string) {
+    return this.membersService.updateStartDate(user_id, startDate);
+  }
 }

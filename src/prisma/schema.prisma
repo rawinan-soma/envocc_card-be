@@ -75,6 +75,7 @@ model documents {
   doc_id      Int       @id @unique(map: "doc_id") @default(autoincrement())
   doc_type    Int?
   doc_name    String?   @unique @db.VarChar(255)
+  doc_file    String?
   url         String?
   create_date DateTime? @default(now()) @db.DateTime(0)
 }

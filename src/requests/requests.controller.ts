@@ -31,8 +31,8 @@ export class RequestsController {
     // @Req() req: LogInRequest,
     @Body() updatedStatus: createStatusDto,
   ) {
-    // const approver = req.user.admin_id;
-    // return this.requestsService.updateStatus(updatedStatus, approver);
+    const approver = 1;
+    return this.requestsService.updateStatus(updatedStatus, approver);
   }
 
   @Post('newcard')
@@ -41,5 +41,7 @@ export class RequestsController {
   }
 
   @Delete('users/:user_id')
-  async deleteRequestByUser(@Param('user_id') user_id: number) {}
+  async deleteRequestByUser(@Param('user_id') user_id: number) {
+    return this.requestsService.deleteRequestByID(user_id);
+  }
 }

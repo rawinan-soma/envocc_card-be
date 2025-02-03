@@ -21,7 +21,11 @@ export class AdminsService {
   async getAllAdmins() {
     try {
       const admins = await this.prismaService.admins.findMany({
-        include: { institutions: { include: { departments: true } } },
+        include: {
+          institutions: { include: { departments: true } },
+          positions: { select: { position_name: true } },
+          position_lvs: { select: { position_lv_name: true } },
+        },
       });
 
       return admins;
@@ -70,9 +74,10 @@ export class AdminsService {
       }
 
       const hashedPassword = await bcrypt.hash(data.password, 10);
+      data.password = hashedPassword;
 
       return await this.prismaService.admins.create({
-        data: { password: hashedPassword, ...data },
+        data: { ...data },
       });
     } catch (error: any) {
       this.logger.error('ERROR: createUser');
