@@ -11,14 +11,7 @@ export class DocumentsService {
 
   async getAllDocuments() {
     try {
-      const documents = await this.prismaService.documents.findMany({
-        select: {
-          doc_id: true,
-          doc_name: true,
-          doc_type: true,
-          // doc_file: true,
-        },
-      });
+      const documents = await this.prismaService.documents.findMany();
 
       return documents;
     } catch (error: any) {

@@ -45,7 +45,7 @@ export class UsersService {
       }
 
       const adminLevelFilter: Prisma.usersWhereInput = {
-        requests: { some: { request_status: { in: filtered } } },
+        // requests: { some: { request_status: { in: filtered } } },
         OR: [
           { fname_th: { startsWith: queryData.fname_th } },
           { lname_th: { contains: queryData.lname_th } },
@@ -55,83 +55,101 @@ export class UsersService {
             },
           },
         ],
+        institutions: {},
       };
 
       if (queryData.adminLevel === 4) {
         adminLevelFilter.institution = queryData.adminInst;
       } else if (queryData.adminLevel === 3) {
-        adminLevelFilter.institutions.province = (
+        const selectedProvince =
           await this.prismaService.institutions.findUnique({
             where: { institution_id: queryData.adminInst },
             select: { province: true },
-          })
-        ).province;
+          });
+        adminLevelFilter.institutions.province = selectedProvince.province;
       } else if (queryData.adminLevel === 5) {
-        adminLevelFilter.institutions.health_region = (
-          await this.prismaService.institutions.findUnique({
+        const selectedRegion = await this.prismaService.institutions.findUnique(
+          {
             where: { institution_id: queryData.adminInst },
             select: { health_region: true },
-          })
-        ).health_region;
+          },
+        );
+        adminLevelFilter.institutions.health_region =
+          selectedRegion.health_region;
       } else if (queryData.adminLevel === 2) {
-        adminLevelFilter.institutions.department = (
-          await this.prismaService.institutions.findUnique({
-            where: { institution_id: queryData.adminInst },
-            select: { department: true },
-          })
-        ).department;
+        const selectedDep = await this.prismaService.institutions.findUnique({
+          where: { institution_id: queryData.adminInst },
+          select: { department: true },
+        });
+
+        adminLevelFilter.institutions.department = selectedDep.department;
       }
+
+      console.log(adminLevelFilter);
 
       const limit = 10;
       const offset = (queryData.page - 1) * limit;
 
-      const users = await this.prismaService.users.findMany({
-        skip: offset,
-        take: limit,
-        select: {
-          user_id: true,
-          pname_th: true,
-          pname_other_th: true,
-          fname_th: true,
-          lname_th: true,
-          institutions: {
-            select: {
-              institution_name_th: true,
-              departments: {
-                select: {
-                  department_name_th: true,
-                  sign_persons: { select: { sign_person_id: true } },
-                  ministries: { select: { ministry_name_th: true } },
+      const allUserList = [];
+      const allUser = await this.prismaService.requests.findMany({
+        select: { user: true },
+        distinct: ['user'],
+      });
+      let users = [];
+
+      allUser.forEach((item) => allUserList.push(item.user));
+
+      for (let index = 0; index < allUserList.length; index++) {
+        const user = await this.prismaService.users.findFirst({
+          skip: offset,
+          take: limit,
+          select: {
+            user_id: true,
+            pname_th: true,
+            pname_other_th: true,
+            fname_th: true,
+            lname_th: true,
+            institutions: {
+              select: {
+                institution_name_th: true,
+                departments: {
+                  select: {
+                    department_name_th: true,
+                    sign_persons: { select: { sign_person_id: true } },
+                    ministries: { select: { ministry_name_th: true } },
+                  },
                 },
               },
             },
+            members: {
+              select: { start_date: true, end_date: true },
+              orderBy: { end_date: 'desc' },
+              take: 1,
+            },
+            requests: {
+              select: { request_status: true },
+              orderBy: { date_update: 'desc' },
+              take: 1,
+            },
+            positions: { select: { position_name: true } },
+            position_lvs: { select: { position_lv_name: true } },
           },
-          members: {
-            select: { start_date: true, end_date: true },
-            orderBy: { end_date: 'desc' },
-          },
-          requests: {
-            select: { request_status: true },
-            orderBy: { date_update: 'desc' },
-          },
-          positions: { select: { position_name: true } },
-          position_lvs: { select: { position_lv_name: true } },
-        },
-        where: adminLevelFilter,
-        // where: {
-        //   institutions: {},
-        //   requests: { some: { request_status: { in: filtered } } },
-        //   OR: [
-        //     { fname_th: { startsWith: queryData.fname_th } },
-        //     { lname_th: `%${queryData.lname_th}%` },
-        //     {
-        //       institutions: {
-        //         institution_name_th: `%${queryData.institution_name}%`,
-        //       },
-        //     },
-        //   ],
-        // },
-      });
+          // where: { user_id: allUserList[index] },
+          where: { AND: [{ user_id: allUserList[index] }, adminLevelFilter] },
+        });
+
+        users.push(user);
+      }
+
+      try {
+        users = users.filter((item) =>
+          filtered.includes(item.requests[0].request_status),
+        );
+      } catch (error) {
+        console.log(error);
+        users = [];
+      }
+
       const totalItems = await this.prismaService.users.count();
       const totalPages = Math.ceil(totalItems / limit);
 
@@ -146,7 +164,7 @@ export class UsersService {
       };
     } catch (error: any) {
       this.logger.error('ERROR: getAllUser');
-      this.logger.error(error);
+      console.log(error);
 
       serviceErrorHandler(error);
     }

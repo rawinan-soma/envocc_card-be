@@ -14,7 +14,8 @@ export class MinioService {
     this.bucketName = bucketName;
 
     this.client = new Minio.Client({
-      endPoint: 'minio',
+      endPoint: 'localhost',
+      // endPoint: 'minio',
       port: 9000,
       useSSL: false,
       accessKey: 'minioadmin',
