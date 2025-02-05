@@ -10,6 +10,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UserLocalStrategy } from './user-local.strategy';
 import { SessionSerializer } from 'src/common/session-serializer';
 import { AdminsModule } from 'src/admins/admins.module';
+import { RequestsModule } from 'src/requests/requests.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AdminsModule } from 'src/admins/admins.module';
     PassportModule.register({ session: true }),
     ExperiencesModule,
     AdminsModule,
+    RequestsModule,
   ],
   controllers: [UserAuthController],
   providers: [

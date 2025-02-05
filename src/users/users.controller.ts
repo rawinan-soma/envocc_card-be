@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -91,8 +92,16 @@ export class UsersController {
     return this.usersService.deleteUser(user_id);
   }
 
+  // @Patch('validate/:user_id')
+  // async validateUser(@Param('user_id') user_id: number) {
+  //   return this.usersService.validateUser(user_id);
+  // }
+
   @Patch('validate/:user_id')
-  async validateUser(@Param('user_id') user_id: number) {
-    return this.usersService.validateUser(user_id);
+  async transactionValidateUser(
+    @Param('user_id', ParseIntPipe) user_id: number,
+  ) {
+    const approver = 1;
+    return this.usersService.transactionValidateUser(user_id, approver);
   }
 }

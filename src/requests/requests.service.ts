@@ -1,7 +1,7 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
-import { createStatusDto } from './dto/create-status.dto';
+import { CreateStatusDto } from './dto/create-status.dto';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { CreateNewRequestDto } from './dto/create-new-request.dto';
 
@@ -31,7 +31,7 @@ export class RequestsService {
     }
   }
 
-  async updateStatus(updated: createStatusDto, approver: number) {
+  async updateStatus(updated: CreateStatusDto, approver: number) {
     try {
       const current = await this.getCurrentStatus(updated.user);
       const mismatchedStatus =
@@ -92,7 +92,7 @@ export class RequestsService {
         );
       }
 
-      data.request_status = 0;
+      data.request_status = 1;
 
       await this.prismaService.requests.create({ data: data });
     } catch (error: any) {

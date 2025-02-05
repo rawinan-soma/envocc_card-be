@@ -13,6 +13,9 @@ import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { CreateMainDto } from './dto/create-main.dto';
 import { ExperiencesService } from 'src/experiences/experiences.service';
 import * as bcrypt from 'bcryptjs';
+import { CreateNewRequestDto } from 'src/requests/dto/create-new-request.dto';
+import { RequestsService } from 'src/requests/requests.service';
+import { CreateStatusDto } from 'src/requests/dto/create-status.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +24,7 @@ export class UsersService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly expService: ExperiencesService,
+    private readonly requestService: RequestsService,
   ) {}
 
   async getAllUsers(queryData: {
@@ -137,7 +141,9 @@ export class UsersService {
           // where: { user_id: allUserList[index] },
           where: { AND: [{ user_id: allUserList[index] }, adminLevelFilter] },
         });
-
+        if (!user) {
+          continue;
+        }
         users.push(user);
       }
 
@@ -438,6 +444,76 @@ export class UsersService {
       this.logger.error('ERROR: validateUser');
       this.logger.error(error);
 
+      serviceErrorHandler(error);
+    }
+  }
+
+  async transactionValidateUser(user_id: number, approver: number) {
+    try {
+      return this.prismaService.$transaction(async (tx) => {
+        const existedUser = await tx.users.findUnique({
+          where: { user_id: user_id },
+        });
+
+        if (!existedUser) {
+          throw new NotFoundException(`User ${user_id} not found`);
+        }
+
+        if (existedUser.is_validate === true) {
+          throw new BadRequestException(`User ${user_id} already activated`);
+        }
+
+        await tx.users.update({
+          where: { user_id: user_id },
+          data: { is_validate: true },
+        });
+
+        const currentStatus = await tx.requests.findFirst({
+          where: { user: user_id },
+          orderBy: { date_update: 'desc' },
+        });
+
+        if (
+          currentStatus.request_status !== 0 &&
+          currentStatus.request_status === 1
+        ) {
+          throw new BadRequestException('User cannot re-activated');
+        }
+
+        const data: CreateStatusDto = {
+          user: user_id,
+          next_status: 1,
+          request_type: 1,
+          current_status: 0,
+        };
+
+        return await tx.requests.create({
+          data: {
+            user: data.user,
+            request_status: data.next_status,
+            request_type: data.request_type,
+            approver: approver,
+          },
+          select: {
+            user: true,
+            req_id: true,
+            request_status: true,
+          },
+        });
+      });
+      // return this.prismaService.$transaction(async () => {
+      //   await this.validateUser(user_id);
+      //   const data: CreateStatusDto = {
+      //     current_status: 0,
+      //     next_status: 1,
+      //     request_type: 1,
+      //     user: user_id,
+      //   };
+
+      //   await this.requestService.updateStatus(data, approver);
+      // });
+    } catch (error) {
+      console.log(error);
       serviceErrorHandler(error);
     }
   }

@@ -245,6 +245,7 @@ export class MembersService {
             qrcode_pass: initPassword,
             ...data,
           },
+          select: { member_id: true },
         });
       });
     } catch (error) {

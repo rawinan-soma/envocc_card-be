@@ -186,7 +186,7 @@ model members {
   create_date DateTime  @default(now()) @db.DateTime(0)
   users       users     @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "members_ibfk_1")
 
-  // @@id([member_id, start_date])
+  @@id([member_id])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -231,17 +231,17 @@ model request_statuses {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model requests {
   req_id           Int              @unique(map: "req_id") @default(autoincrement())
-  user             Int?
+  user             Int
   request_status   Int
   request_type     Int
   approver         Int?
-  description      String           @default("")
+  description      String?          @default("")
   date_update      DateTime         @default(now()) @db.DateTime(0)
-  users            users?           @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "requests_ibfk_1")
+  users            users            @relation(fields: [user], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "requests_ibfk_1")
   admins           admins?          @relation(fields: [approver], references: [admin_id], onDelete: NoAction, onUpdate: NoAction, map: "requests_ibfk_2")
   request_statuses request_statuses @relation(fields: [request_status], references: [status_id], onDelete: NoAction, onUpdate: NoAction, map: "requests_ibfk_3")
 
-  @@id([req_id, request_status, date_update])
+  @@id([req_id])
   @@index([approver], map: "approver")
   @@index([request_status], map: "request_status")
   @@index([user], map: "user")
