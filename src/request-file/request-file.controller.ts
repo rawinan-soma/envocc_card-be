@@ -32,7 +32,7 @@ export class RequestFileController {
   )
   // user
   async createReqFile(@UploadedFile() file: Express.Multer.File) {
-    let data: CreateReqFileDto;
+    const data: CreateReqFileDto = new CreateReqFileDto();
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.user = 1;
     data.file_name = fileUrl.fileName;

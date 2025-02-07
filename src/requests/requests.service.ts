@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { CreateNewRequestDto } from './dto/create-new-request.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class RequestsService {
@@ -118,6 +119,27 @@ export class RequestsService {
       this.logger.error(error);
 
       serviceErrorHandler(error);
+    }
+  }
+
+  async transactionDeleteRequest(
+    tx: Prisma.TransactionClient,
+    user_id: number,
+  ) {
+    try {
+      const request = await tx.requests.findFirst({
+        where: { user: user_id },
+        orderBy: { date_update: 'desc' },
+      });
+      const isInitiate = request.request_status === 0;
+
+      if (!request || !isInitiate) {
+        throw new BadRequestException('Bad request by user');
+      }
+
+      await tx.requests.delete({ where: { req_id: request.req_id } });
+    } catch (error) {
+      throw error;
     }
   }
 }

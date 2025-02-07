@@ -8,4 +8,6 @@ export class CreateSealDto {
   seal_pix: string;
 
   url: string;
+
+  seal_name: string;
 }

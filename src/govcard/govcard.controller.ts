@@ -45,8 +45,8 @@ export class GovcardController {
   ) {
     const fileUrl = await this.minio.uploadFileToBucket(file);
     // FIXME: use after authen guard
-    let data: CreateGovcardDto;
-    data.user = 1;
+    const data: CreateGovcardDto = new CreateGovcardDto();
+    data.user = 13;
     data.file_name = fileUrl.fileName;
     data.url = fileUrl.url;
 

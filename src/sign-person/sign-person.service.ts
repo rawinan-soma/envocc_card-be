@@ -44,8 +44,8 @@ export class SignPersonService {
           sign_person_name: data.sign_person_name,
           signature_pix: data.signature_pix,
           position: data.position,
-          admins: { connect: { admin_id: data.update_admin } },
-          departments: { connect: { department_id: data.department } },
+          update_admin: data.update_admin,
+          institutions: { connect: { institution_id: data.institution } },
           url: data.url,
         },
       });

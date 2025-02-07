@@ -44,7 +44,7 @@ export class ExpfileController {
     // @Req() req: LogInRequest,
   ) {
     // FIXME: use after allocate authen guard in full test and prod stage
-    let data: CreateExpfileDto;
+    const data: CreateExpfileDto = new CreateExpfileDto();
     const fileUrl = await this.minio.uploadFileToBucket(file);
     // data.user = req.user.user_id;
     data.file_name = fileUrl.fileName;

@@ -1,10 +1,12 @@
 networks:
   envcard-network:
     driver: bridge
+
 volumes:
   envcard-mysql-data:
   envcard-mysql-log:
   minio_data:
+  redis-data:
 services:
   # TODO: Link volume ของไฟล์ Assets ทุกตัวก่อน Prod
   envcard-mysql:
@@ -35,7 +37,7 @@ services:
       dockerfile: Dockerfile
       target: base
     env_file:
-      - /src/.env
+      - /src/seeder.env
     depends_on:
       envcard-mysql:
         condition: service_healthy
@@ -95,8 +97,6 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    profiles:
-      - 'dev'
     container_name: phpmyadmin
     environment:
       PMA_HOST: envcard-mysql
@@ -119,3 +119,19 @@ services:
     command: server --console-address ":9001" /data
     networks:
       - envcard-network
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - '6379:6379'
+
+  redis-ui:
+    image: redis/redisinsight:latest
+    container_name: redis-ui
+    depends_on:
+      - redis
+    ports:
+      - '5540:5540'
+    volumes:
+      - redis-data:/data

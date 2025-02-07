@@ -28,7 +28,6 @@ export class SessionSerializer extends PassportSerializer {
 
   async deserializeUser(payload: any, done: CallableFunction) {
     try {
-      console.log('FROM Deserializer', payload);
       let user: any;
 
       if (payload.role === 'user') {

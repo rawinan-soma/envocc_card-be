@@ -6,6 +6,10 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { createClient } from 'redis';
+
+import { RedisStore } from 'connect-redis';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'fatal', 'log', 'warn'],
@@ -28,8 +32,17 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
+  const redisClient = await createClient({
+    url: `redis://default@${configService.get('REDIS_HOST')}:${configService.get('REDIS_PORT')}`,
+  })
+    .on('error', (err) => console.log('Redis Client Error', err))
+    .connect();
+
+  const redisStore = new RedisStore({ client: redisClient });
+
   app.use(
     session({
+      store: redisStore,
       secret: configService.get('SESSION_SECRET'),
       resave: false,
       saveUninitialized: false,

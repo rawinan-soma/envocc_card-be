@@ -116,10 +116,10 @@ export class UsersService {
             institutions: {
               select: {
                 institution_name_th: true,
+                sign_persons: { select: { sign_person_id: true } },
                 departments: {
                   select: {
                     department_name_th: true,
-                    sign_persons: { select: { sign_person_id: true } },
                     ministries: { select: { ministry_name_th: true } },
                   },
                 },
@@ -193,6 +193,16 @@ export class UsersService {
             select: {
               institution_name_th: true,
               institution_name_eng: true,
+              seals: { select: { seal_pix: true } },
+              sign_persons: {
+                select: {
+                  sign_person_pname: true,
+                  sign_person_name: true,
+                  sign_person_lname: true,
+                  signature_pix: true,
+                  position: true,
+                },
+              },
               departments: {
                 select: {
                   department_name_th: true,
@@ -203,16 +213,6 @@ export class UsersService {
                       ministry_name_eng: true,
                     },
                   },
-                  sign_persons: {
-                    select: {
-                      sign_person_pname: true,
-                      sign_person_name: true,
-                      sign_person_lname: true,
-                      signature_pix: true,
-                      position: true,
-                    },
-                  },
-                  seals: { select: { seal_pix: true } },
                 },
               },
             },
@@ -416,7 +416,7 @@ export class UsersService {
         where: { user_id: user_id },
       });
     } catch (error: any) {
-      this.logger.error('ERROR: updateUser');
+      this.logger.error('ERROR: deleteUser');
       this.logger.error(error);
       serviceErrorHandler(error);
     }
@@ -540,6 +540,37 @@ export class UsersService {
       this.logger.error('ERROR: invalidateUser');
       this.logger.error(error);
 
+      serviceErrorHandler(error);
+    }
+  }
+
+  async transactionDeleteUser(tx: Prisma.TransactionClient, user_id: number) {
+    try {
+      const existedUser = await tx.users.findUnique({
+        where: { user_id: user_id },
+      });
+
+      if (!existedUser) {
+        throw new NotFoundException(`User ${user_id} not found`);
+      }
+
+      await tx.users.delete({
+        where: { user_id: user_id },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteUserAndRequest(user_id: number) {
+    try {
+      await this.prismaService.$transaction(async (tx) => {
+        await this.requestService.transactionDeleteRequest(tx, user_id);
+        await this.transactionDeleteUser(tx, user_id);
+      });
+    } catch (error: any) {
+      this.logger.error('ERROR: deleteUserAndRequest');
+      this.logger.error(error);
       serviceErrorHandler(error);
     }
   }

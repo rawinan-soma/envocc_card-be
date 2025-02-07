@@ -1,7 +1,6 @@
 import { randomFilename } from 'src/common/randomFilename';
 import { Inject, Injectable } from '@nestjs/common';
 import * as Minio from 'minio';
-import * as fs from 'fs';
 import { extname } from 'path';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 

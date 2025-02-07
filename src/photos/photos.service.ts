@@ -17,7 +17,9 @@ export class PhotosService {
       });
 
       if (!photo) {
-        throw new NotFoundException('Cannot find photo for this user_id');
+        throw new NotFoundException(
+          `Cannot find photo for this user: ${user_id}`,
+        );
       }
 
       return photo;

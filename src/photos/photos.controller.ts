@@ -37,9 +37,9 @@ export class PhotosController {
     // @Body() data: CreatePhotoDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    let data: CreatePhotoDto;
     const fileUrl = await this.minio.uploadFileToBucket(file);
-    data.user = 1;
+    const data: CreatePhotoDto = new CreatePhotoDto();
+    data.user = 13;
     data.photo = fileUrl.fileName;
     data.url = fileUrl.url;
     return this.photosService.createPhoto(data);

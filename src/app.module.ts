@@ -30,6 +30,7 @@ import { AdminAuthModule } from './admin-auth/admin-auth.module';
 import { MinioModule } from './minio/minio.module';
 import { SealsModule } from './seals/seals.module';
 import { RequestFileModule } from './request-file/request-file.module';
+import { HealthController } from './health.controller';
 
 @Module({
   imports: [
@@ -42,6 +43,8 @@ import { RequestFileModule } from './request-file/request-file.module';
         MYSQL_PASSWORD: Joi.string().required(),
         MYSQL_DB: Joi.string().required(),
         SESSION_SECRET: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDIS_PORT: Joi.number().required(),
       }),
     }),
     UsersModule,
@@ -69,7 +72,7 @@ import { RequestFileModule } from './request-file/request-file.module';
     SealsModule,
     RequestFileModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController],
   providers: [AppService],
 })
 export class AppModule {}

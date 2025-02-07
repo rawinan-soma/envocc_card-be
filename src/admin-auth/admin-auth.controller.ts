@@ -19,6 +19,7 @@ export class AdminAuthController {
   @UseGuards(AdminLocalGuard)
   @Post('login')
   async logIn(@Req() request: AdminRequest) {
+    console.log(request.sessionID);
     return request.session;
   }
 

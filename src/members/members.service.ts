@@ -5,7 +5,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 
@@ -65,25 +64,25 @@ export class MembersService {
                       department_id: true,
                       department_name_th: true,
                       department_name_eng: true,
-                      sign_persons: {
-                        select: {
-                          signature_pix: true,
-                          sign_person_pname: true,
-                          sign_person_name: true,
-                          sign_person_lname: true,
-                          position: true,
-                        },
-                      },
-                      seals: {
-                        select: {
-                          seal_id: true,
-                          seal_pix: true,
-                        },
-                      },
+                    },
+                  },
+                  seals: {
+                    select: {
+                      seal_id: true,
+                      seal_pix: true,
                     },
                   },
                 },
               },
+            },
+          },
+          sign_persons: {
+            select: {
+              signature_pix: true,
+              sign_person_pname: true,
+              sign_person_name: true,
+              sign_person_lname: true,
+              position: true,
             },
           },
         },

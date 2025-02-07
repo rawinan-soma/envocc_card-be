@@ -10,8 +10,7 @@ export class CreateSignPersonDto {
   @IsString()
   sign_person_lname: string;
 
-  @IsString()
-  signature_pix: string;
+  signature_pix?: string;
 
   @IsString()
   position: string;
@@ -20,7 +19,7 @@ export class CreateSignPersonDto {
   update_admin: number;
 
   @IsNumber()
-  department: number;
+  institution: number;
 
   url: string;
 }

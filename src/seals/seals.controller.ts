@@ -3,6 +3,7 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  Body,
 } from '@nestjs/common';
 import { SealsService } from './seals.service';
 import { MinioService } from 'src/minio/minio.service';
@@ -27,12 +28,16 @@ export class SealsController {
       }),
     ),
   )
-  async insertSeal(@UploadedFile() file: Express.Multer.File) {
-    let data: CreateSealDto;
+  async insertSeal(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() seal_name: string,
+  ) {
+    const data: CreateSealDto = new CreateSealDto();
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.seal_pix = fileUrl.fileName;
     data.url = fileUrl.url;
     data.update_admin = 1;
+    data.seal_name = seal_name;
 
     return this.sealsService.createSeal(data);
   }

@@ -47,7 +47,7 @@ export class ExpsfileController {
     file: Express.Multer.File,
   ) {
     // FIXME: use after allocate authen guard
-    let data: CreateExpsfileDto;
+    const data: CreateExpsfileDto = new CreateExpsfileDto();
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.admin = 1;
     data.exp_file = fileUrl.fileName;

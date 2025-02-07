@@ -43,11 +43,11 @@ export class EnvcardController {
     // @Req() req: LogInRequest,
   ) {
     // FIXME: user after allocate authen guard
-    let data: CreateEnvcardDto;
+    const data: CreateEnvcardDto = new CreateEnvcardDto();
     // data.user = req.user.user_id;
     const fileUrl = await this.minioService.uploadFileToBucket(file);
 
-    data.user = 1; // example user
+    data.user = 13; // example user
     data.file_card_name = fileUrl.fileName;
     data.url = fileUrl.url;
     return this.envcardService.createCardFile(data);

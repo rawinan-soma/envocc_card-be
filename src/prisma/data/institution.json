@@ -6,7 +6,9 @@
     "institution_name_eng": "Other",
     "department": 21002,
     "province": 12,
-    "health_region": 4
+    "health_region": 4,
+    "sign_person": null,
+    "seal": null
   },
   {
     "institution_id": 1,

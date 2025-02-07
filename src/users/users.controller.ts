@@ -87,10 +87,10 @@ export class UsersController {
     return this.usersService.updateUser(username, updatedUser);
   }
 
-  @Delete(':user_id')
-  async deleteUser(@Param('user_id') user_id: number) {
-    return this.usersService.deleteUser(user_id);
-  }
+  // @Delete(':user_id')
+  // async deleteUser(@Param('user_id') user_id: number) {
+  //   return this.usersService.deleteUser(user_id);
+  // }
 
   // @Patch('validate/:user_id')
   // async validateUser(@Param('user_id') user_id: number) {
@@ -103,5 +103,10 @@ export class UsersController {
   ) {
     const approver = 1;
     return this.usersService.transactionValidateUser(user_id, approver);
+  }
+
+  @Delete(':user_id')
+  async deleteUserRequest(@Param('user_id', ParseIntPipe) user_id: number) {
+    return this.usersService.deleteUserAndRequest(user_id);
   }
 }
