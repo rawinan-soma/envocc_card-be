@@ -43,6 +43,7 @@ export class SignPersonController {
   ) {
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.signature_pix = fileUrl.fileName;
+    data.url = fileUrl.url;
     return this.signPersonService.addSignPerson(data);
   }
 }

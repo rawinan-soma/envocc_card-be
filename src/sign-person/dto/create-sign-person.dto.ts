@@ -21,5 +21,5 @@ export class CreateSignPersonDto {
   @IsNumber()
   institution: number;
 
-  url: string;
+  url?: string;
 }

@@ -56,12 +56,12 @@ model admins {
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model departments {
-  department_id       Int        @id @unique(map: "department_id")
-  department_name_th  String     @db.VarChar(255)
-  department_name_eng String     @db.VarChar(255)
+  department_id       Int    @id @unique(map: "department_id")
+  department_name_th  String @db.VarChar(255)
+  department_name_eng String @db.VarChar(255)
   ministry            Int
-  department_seal     Int        @unique(map: "department_seal")
-  ministries          ministries @relation(fields: [ministry], references: [ministry_id], onDelete: Cascade, onUpdate: NoAction, map: "departments_ibfk_1")
+
+  ministries ministries @relation(fields: [ministry], references: [ministry_id], onDelete: Cascade, onUpdate: NoAction, map: "departments_ibfk_1")
 
   institutions institutions[]
 
@@ -91,11 +91,11 @@ model envocc_card_files {
 }
 
 model epositions {
-  eposition_id       Int          @id @unique(map: "eposition_id")
-  eposition_name_th  String       @db.VarChar(255)
-  eposition_name_eng String       @db.VarChar(255)
+  eposition_id       Int           @id @unique(map: "eposition_id")
+  eposition_name_th  String        @db.VarChar(255)
+  eposition_name_eng String        @db.VarChar(255)
   institution        Int
-  institutions       institutions @relation(fields: [institution], references: [institution_id])
+  institutions       institutions? @relation(fields: [institution], references: [institution_id])
   users              users[]
 }
 

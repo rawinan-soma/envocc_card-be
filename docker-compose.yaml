@@ -19,8 +19,6 @@ services:
     volumes:
       - envcard-mysql-data:/var/lib/mysql
       - envcard-mysql-log:/var/log/mysql
-      - /config/my.conf:/etc/mysql/conf.d/config-file.cnf
-      - /init:/docker-entrypoint-initdb.d
     networks:
       - envcard-network
     healthcheck:
