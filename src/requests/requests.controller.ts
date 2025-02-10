@@ -29,7 +29,6 @@ export class RequestsController {
   //   return this.requestsService.getCurrentStatus(id);
   // }
 
-  @UseGuards(AdminCookieGuard)
   @Post('update')
   async updateStatus(
     @Req() request: AdminRequest,

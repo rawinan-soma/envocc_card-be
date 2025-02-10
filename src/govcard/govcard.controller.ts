@@ -19,7 +19,6 @@ import { MinioService } from 'src/minio/minio.service';
 import { FilesService } from 'src/files/files.service';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 
-@UseGuards(UserCookieGuard)
 @Controller('govCards')
 export class GovcardController {
   constructor(

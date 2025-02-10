@@ -15,7 +15,6 @@ import { CreateSealDto } from './dto/create-seal.dto';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import AdminRequest from 'src/admin-auth/admin-request.interface';
 
-@UseGuards(AdminCookieGuard)
 @Controller('seals')
 export class SealsController {
   constructor(

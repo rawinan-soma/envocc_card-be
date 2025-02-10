@@ -20,7 +20,6 @@ import { FilesService } from 'src/files/files.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import AdminRequest from 'src/admin-auth/admin-request.interface';
 
-@UseGuards(AdminCookieGuard)
 @Controller('expsFile')
 export class ExpsfileController {
   constructor(

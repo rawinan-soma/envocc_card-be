@@ -23,7 +23,6 @@ import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(AdminCookieGuard)
   @Get()
   async getUsers(
     @Req() request: AdminRequest,
@@ -52,13 +51,11 @@ export class UsersController {
     });
   }
 
-  @UseGuards(UserCookieGuard)
   @Get('printForm/:user_id')
   async getPrintUser(@Param('user_id') user_id: number) {
     return this.usersService.getPrintUser(user_id);
   }
 
-  @UseGuards(UserCookieGuard)
   @Get('printExp/:user_id')
   async getPrintExp(@Param('user_id') user_id: number) {
     return this.usersService.getPrintExpbyUser(user_id);
@@ -82,7 +79,6 @@ export class UsersController {
     return this.usersService.createUser(newUserWithExp);
   }
 
-  @UseGuards(UserCookieGuard)
   @Patch(':username')
   async UpdateUserDto(
     @Param('username') username: string,
@@ -101,7 +97,6 @@ export class UsersController {
   //   return this.usersService.validateUser(user_id);
   // }
 
-  @UseGuards(AdminCookieGuard)
   @Patch('validate/:user_id')
   async transactionValidateUser(
     @Param('user_id', ParseIntPipe) user_id: number,
@@ -111,7 +106,6 @@ export class UsersController {
     return this.usersService.transactionValidateUser(user_id, approver);
   }
 
-  @UseGuards(AdminCookieGuard)
   @Delete(':user_id')
   async deleteUserRequest(@Param('user_id', ParseIntPipe) user_id: number) {
     return this.usersService.deleteUserAndRequest(user_id);

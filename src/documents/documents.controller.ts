@@ -21,7 +21,7 @@ import { FilesService } from 'src/files/files.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 import { MinioService } from 'src/minio/minio.service';
-import { Response } from 'express';
+
 // import { UserLocalCredentialGuard } from 'src/user-auth/user-local-credential.guard';
 
 @Controller('documents')
@@ -32,7 +32,6 @@ export class DocumentsController {
   ) {}
 
   @Post()
-  @UseGuards(AdminCookieGuard)
   @UseInterceptors(
     FileInterceptor(
       'document',
@@ -69,7 +68,6 @@ export class DocumentsController {
     return fileName;
   }
 
-  @UseGuards(AdminCookieGuard)
   @Delete(':doc_id')
   async deleteDocument(@Param('doc_id', ParseIntPipe) doc_id: number) {
     const file = await this.documentsService.getOneDocument(doc_id);

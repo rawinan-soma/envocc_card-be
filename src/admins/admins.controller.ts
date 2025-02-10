@@ -15,7 +15,6 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 // import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
-@UseGuards(AdminCookieGuard)
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}

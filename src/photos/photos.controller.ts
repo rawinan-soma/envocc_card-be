@@ -17,7 +17,6 @@ import { FilesService } from 'src/files/files.service';
 import { MinioService } from 'src/minio/minio.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 
-@UseGuards(AdminCookieGuard)
 @Controller('photos')
 export class PhotosController {
   constructor(
