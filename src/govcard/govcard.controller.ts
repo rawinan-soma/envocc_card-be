@@ -18,8 +18,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MinioService } from 'src/minio/minio.service';
 import { FilesService } from 'src/files/files.service';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 
-@UseGuards(UserCookieGuard)
+@UseGuards(AdminCookieGuard)
 @Controller('govCards')
 export class GovcardController {
   constructor(
