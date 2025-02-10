@@ -7,15 +7,17 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PhotosService } from './photos.service';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FilesService } from 'src/files/files.service';
 import { MinioService } from 'src/minio/minio.service';
+import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 
+@UseGuards(AdminCookieGuard)
 @Controller('photos')
 export class PhotosController {
   constructor(
@@ -34,24 +36,24 @@ export class PhotosController {
     ),
   )
   async insertPhoto(
-    // @Body() data: CreatePhotoDto,
+    @Body('user', ParseIntPipe) user: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
     const fileUrl = await this.minio.uploadFileToBucket(file);
     const data: CreatePhotoDto = new CreatePhotoDto();
-    data.user = 13;
+    data.user = user;
     data.photo = fileUrl.fileName;
     data.url = fileUrl.url;
     return this.photosService.createPhoto(data);
   }
 
   @Get(':user_id')
-  async getPhotoByUser(@Param('user_id') user_id: number) {
+  async getPhotoByUser(@Param('user_id', ParseIntPipe) user_id: number) {
     return (await this.photosService.getPhotoByUser(user_id)).url;
   }
 
   @Delete(':user_id')
-  async deletePhoto(@Param() user_id: number) {
+  async deletePhoto(@Param('user_id', ParseIntPipe) user_id: number) {
     const file = await this.photosService.getPhotoByUser(user_id);
     await this.photosService.deletePhoto(file.photo_id);
     await this.minio.deleteDocument(file.photo);

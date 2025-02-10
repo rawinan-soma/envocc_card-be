@@ -16,6 +16,7 @@ export class CookieAuthGuard implements CanActivate {
     return this.validateUser(user);
   }
 
+  // TODO: Enhance with soft delete
   protected validateUser(user: any): boolean {
     console.log('FROM COOKIEAUTH Checking user: ', user);
     return !!user && (user.role === 'user' || user.role === 'admin');

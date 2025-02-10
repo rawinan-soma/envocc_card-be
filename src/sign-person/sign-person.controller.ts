@@ -5,16 +5,18 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { SignPersonService } from './sign-person.service';
 import { CreateSignPersonDto } from './dto/create-sign-person.dto';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { FileUploadDto } from 'src/common/file-upload.dto';
 import { MinioService } from 'src/minio/minio.service';
 import { FilesService } from 'src/files/files.service';
+import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
+import AdminRequest from 'src/admin-auth/admin-request.interface';
 
+@UseGuards(AdminCookieGuard)
 @Controller('sign-person')
 export class SignPersonController {
   constructor(
@@ -40,10 +42,12 @@ export class SignPersonController {
   async addSignPerson(
     @UploadedFile() file: Express.Multer.File,
     @Body() data: CreateSignPersonDto,
+    @Req() request: AdminRequest,
   ) {
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.signature_pix = fileUrl.fileName;
     data.url = fileUrl.url;
+    data.update_admin = request.admin.admin_id;
     return this.signPersonService.addSignPerson(data);
   }
 }

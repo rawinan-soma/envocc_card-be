@@ -16,7 +16,7 @@ export class CreateSignPersonDto {
   position: string;
 
   @IsNumber()
-  update_admin: number;
+  update_admin?: number;
 
   @IsNumber()
   institution: number;

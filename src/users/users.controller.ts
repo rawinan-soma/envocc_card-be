@@ -9,21 +9,26 @@ import {
   Delete,
   Req,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 // import LogInRequest from 'src/admin-auth/log-in-request.interface';
 import { CreateMainDto } from './dto/create-main.dto';
+import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
+import AdminRequest from 'src/admin-auth/admin-request.interface';
+import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AdminCookieGuard)
   @Get()
   async getUsers(
-    // @Req() req: LogInRequest,
-    @Query('adminLevel') adminLevel: number,
-    @Query('adminInst') adminInst: number,
+    @Req() request: AdminRequest,
+    // @Query('adminLevel') adminLevel: number,
+    // @Query('adminInst') adminInst: number,
     @Query('page') page: string,
     @Query('status') status: string,
     @Query('fname_th') fname_th?: string,
@@ -32,13 +37,9 @@ export class UsersController {
   ) {
     const pageNumber =
       page == '0' || !page || page.match(/[a-zA-Z]/) ? 1 : parseInt(page, 10);
-    // const pageNumber = parseInt(page, 10) || 1;
 
-    // const adminLevel = 1;
-    // const adminInst = 1;
-
-    // const adminLevel = req.user.level;
-    // const adminInst = req.user.institution;
+    const adminLevel = request.admin.level;
+    const adminInst = request.admin.institution;
 
     return this.usersService.getAllUsers({
       adminLevel: adminLevel,
@@ -51,11 +52,13 @@ export class UsersController {
     });
   }
 
+  @UseGuards(UserCookieGuard)
   @Get('printForm/:user_id')
   async getPrintUser(@Param('user_id') user_id: number) {
     return this.usersService.getPrintUser(user_id);
   }
 
+  @UseGuards(UserCookieGuard)
   @Get('printExp/:user_id')
   async getPrintExp(@Param('user_id') user_id: number) {
     return this.usersService.getPrintExpbyUser(user_id);
@@ -79,6 +82,7 @@ export class UsersController {
     return this.usersService.createUser(newUserWithExp);
   }
 
+  @UseGuards(UserCookieGuard)
   @Patch(':username')
   async UpdateUserDto(
     @Param('username') username: string,
@@ -97,14 +101,17 @@ export class UsersController {
   //   return this.usersService.validateUser(user_id);
   // }
 
+  @UseGuards(AdminCookieGuard)
   @Patch('validate/:user_id')
   async transactionValidateUser(
     @Param('user_id', ParseIntPipe) user_id: number,
+    @Req() request: AdminRequest,
   ) {
-    const approver = 1;
+    const approver = request.admin.admin_id;
     return this.usersService.transactionValidateUser(user_id, approver);
   }
 
+  @UseGuards(AdminCookieGuard)
   @Delete(':user_id')
   async deleteUserRequest(@Param('user_id', ParseIntPipe) user_id: number) {
     return this.usersService.deleteUserAndRequest(user_id);

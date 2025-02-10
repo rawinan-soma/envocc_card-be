@@ -9,6 +9,7 @@ import {
   UseGuards,
   Body,
   Res,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -31,6 +32,7 @@ export class DocumentsController {
   ) {}
 
   @Post()
+  @UseGuards(AdminCookieGuard)
   @UseInterceptors(
     FileInterceptor(
       'document',
@@ -55,24 +57,21 @@ export class DocumentsController {
     return this.documentsService.createDocument(data);
   }
 
-  // @Roles(UserRole.admin)
   @Get()
-  // @UseGuards(UserCookieGuard)
-  // admin
   async getAllDocuments() {
     return this.documentsService.getAllDocuments();
   }
 
   @Get(':doc_id')
-  async getOneDocument(@Param('doc_id') doc_id: number) {
+  async getOneDocument(@Param('doc_id', ParseIntPipe) doc_id: number) {
     const fileName = (await this.documentsService.getOneDocument(doc_id)).url;
 
     return fileName;
   }
 
-  // admin
+  @UseGuards(AdminCookieGuard)
   @Delete(':doc_id')
-  async deleteDocument(@Param('doc_id') doc_id: number) {
+  async deleteDocument(@Param('doc_id', ParseIntPipe) doc_id: number) {
     const file = await this.documentsService.getOneDocument(doc_id);
     await this.documentsService.deleteDocument(file.doc_id);
     await this.minioService.deleteDocument(file.doc_name);

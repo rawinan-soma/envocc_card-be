@@ -1,26 +1,25 @@
 import {
   Controller,
   Post,
-  Body,
   UploadedFile,
   UseInterceptors,
-  Req,
   Get,
   Param,
   Delete,
+  Body,
+  ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { GovcardService } from './govcard.service';
 import { CreateGovcardDto } from './dto/create-govcard.dto';
 
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { FileUploadDto } from 'src/common/file-upload.dto';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 // import LogInRequest from 'src/user-auth/log-in-request.interface';
-import { randomFilename } from 'src/common/randomFilename';
 import { MinioService } from 'src/minio/minio.service';
 import { FilesService } from 'src/files/files.service';
+import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 
+@UseGuards(UserCookieGuard)
 @Controller('govCards')
 export class GovcardController {
   constructor(
@@ -39,14 +38,12 @@ export class GovcardController {
     ),
   )
   async uploadGovCardFile(
-    // @Body() data: CreateGovcardDto,
     @UploadedFile() file: Express.Multer.File,
-    // @Req() req: LogInRequest,
+    @Body('user', ParseIntPipe) user: number,
   ) {
     const fileUrl = await this.minio.uploadFileToBucket(file);
-    // FIXME: use after authen guard
     const data: CreateGovcardDto = new CreateGovcardDto();
-    data.user = 13;
+    data.user = user;
     data.file_name = fileUrl.fileName;
     data.url = fileUrl.url;
 
@@ -54,12 +51,12 @@ export class GovcardController {
   }
 
   @Get(':user')
-  async getGovCard(@Param() user: number) {
+  async getGovCard(@Param('user', ParseIntPipe) user: number) {
     return (await this.govcardService.getGovCardfile(user)).url;
   }
 
   @Delete(':user')
-  async deleteGovCard(@Param() user_id: number) {
+  async deleteGovCard(@Param('user', ParseIntPipe) user_id: number) {
     const file = await this.govcardService.getGovCardfile(user_id);
     await this.govcardService.deleteGovCard(user_id);
     await this.minio.deleteDocument(file.file_name);
