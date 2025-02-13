@@ -9,12 +9,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { createClient } from 'redis';
 
 import { RedisStore } from 'connect-redis';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'fatal', 'log', 'warn'],
     cors: {
-      origin: 'http://localhost:3000',
+      origin: ['http://localhost:3000', 'http://203.157.41.59:3000'],
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization'],
       methods: ['GET', 'POST', 'PATCH', 'DELETE'],
@@ -39,6 +40,8 @@ async function bootstrap() {
     .connect();
 
   const redisStore = new RedisStore({ client: redisClient });
+
+  app.use(cookieParser());
 
   app.use(
     session({
@@ -69,6 +72,6 @@ async function bootstrap() {
 
   app.use(passport.session());
 
-  await app.listen(3000);
+  await app.listen(3002);
 }
 bootstrap();

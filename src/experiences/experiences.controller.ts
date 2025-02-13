@@ -45,6 +45,7 @@ export class ExperiencesController {
     return await this.experiencesService.deleteExps(exp_id);
   }
 
+  @UseGuards(AdminCookieGuard)
   @Get('expsForm')
   async getExpsForm(@Req() request: AdminRequest) {
     const institution_id = request.admin.institution;

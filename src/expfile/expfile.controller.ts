@@ -19,6 +19,7 @@ import { MinioService } from 'src/minio/minio.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 // import LogInRequest from 'src/user-auth/log-in-request.interface';
 
+@UseGuards(AdminCookieGuard)
 @Controller('expFiles')
 export class ExpfileController {
   constructor(

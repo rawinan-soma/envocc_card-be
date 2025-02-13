@@ -2,7 +2,7 @@ import { admins } from '@prisma/client';
 import { Request } from 'express';
 
 interface AdminRequest extends Request {
-  admin: admins & { role: string };
+  admin: Omit<admins, 'password'>;
 }
 
 export default AdminRequest;

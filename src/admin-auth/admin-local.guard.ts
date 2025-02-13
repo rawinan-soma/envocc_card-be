@@ -9,6 +9,8 @@ export class AdminLocalGuard extends AuthGuard('admin') {
     const request = context.switchToHttp().getRequest();
     await super.logIn(request);
 
+    console.log('ATTEMP LOGIN BY USER: ', request.user);
+
     return true;
   }
 }

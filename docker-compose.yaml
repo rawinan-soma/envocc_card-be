@@ -7,6 +7,7 @@ volumes:
   envcard-mysql-log:
   minio_data:
   redis-data:
+  portainer_data:
 services:
   # TODO: Link volume ของไฟล์ Assets ทุกตัวก่อน Prod
   envcard-mysql:
@@ -35,7 +36,7 @@ services:
       dockerfile: Dockerfile
       target: base
     env_file:
-      - /src/seeder.env
+      - ./src/seeder.env
     depends_on:
       envcard-mysql:
         condition: service_healthy
@@ -51,9 +52,9 @@ services:
       dockerfile: Dockerfile
       target: dev
     env_file:
-      - /src/.env
+      - ./src/dev-docker.env
     ports:
-      - '3002:3000'
+      - '3002:3002'
     depends_on:
       envcard-mysql:
         condition: service_healthy
@@ -62,7 +63,7 @@ services:
     networks:
       - envcard-network
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
+      test: ['CMD', 'curl', '-f', 'http://203.157.41.59:3002/']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -75,9 +76,9 @@ services:
       dockerfile: Dockerfile
       target: prod
     env_file:
-      - /src/.env
+      - /src/dev-docker.env
     ports:
-      - '3002:3000'
+      - '3002:3002'
     depends_on:
       envcard-mysql:
         condition: service_healthy
@@ -86,7 +87,7 @@ services:
     networks:
       - envcard-network
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/']
+      test: ['CMD', 'curl', '-f', 'http://203.157.41.59:3002/']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -123,6 +124,8 @@ services:
     container_name: redis
     ports:
       - '6379:6379'
+    networks:
+      - envcard-network
 
   redis-ui:
     image: redis/redisinsight:latest
@@ -133,3 +136,15 @@ services:
       - '5540:5540'
     volumes:
       - redis-data:/data
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - '8800:8800'
+      - '9002:9002'
+      - '9443:9443'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data

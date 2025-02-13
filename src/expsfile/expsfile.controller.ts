@@ -20,6 +20,7 @@ import { FilesService } from 'src/files/files.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import AdminRequest from 'src/admin-auth/admin-request.interface';
 
+@UseGuards(AdminCookieGuard)
 @Controller('expsFile')
 export class ExpsfileController {
   constructor(
@@ -42,9 +43,10 @@ export class ExpsfileController {
     file: Express.Multer.File,
     @Req() request: AdminRequest,
   ) {
+    const admin = JSON.parse(JSON.stringify(request.user));
     const data: CreateExpsfileDto = new CreateExpsfileDto();
     const fileUrl = await this.minio.uploadFileToBucket(file);
-    data.admin = request.admin.admin_id;
+    data.admin = admin.admin_id;
     data.exp_file = fileUrl.fileName;
     data.url = fileUrl.url;
 

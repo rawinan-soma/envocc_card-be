@@ -17,6 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateReqFileDto } from './dto/request-file.dto';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 
+@UseGuards(AdminCookieGuard)
 @Controller('request-file')
 export class RequestFileController {
   constructor(

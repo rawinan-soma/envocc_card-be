@@ -23,6 +23,7 @@ import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AdminCookieGuard)
   @Get()
   async getUsers(
     @Req() request: AdminRequest,
@@ -34,11 +35,18 @@ export class UsersController {
     @Query('lname_th') lname_th?: string,
     @Query('institution_name') institution_name?: string,
   ) {
+    console.log('START REQUEST');
+    const admin = JSON.parse(JSON.stringify(request.user));
+    console.log('REQUEST SESSION_ID GET /USER: ', request.sessionID);
+    console.log('FROM GET USER: ', request.user);
+
     const pageNumber =
       page == '0' || !page || page.match(/[a-zA-Z]/) ? 1 : parseInt(page, 10);
 
-    const adminLevel = request.admin.level;
-    const adminInst = request.admin.institution;
+    // const adminLevel = 1;
+    const adminLevel = admin.level;
+    // const adminInst = 1;
+    const adminInst = admin.institution;
 
     return this.usersService.getAllUsers({
       adminLevel: adminLevel,
@@ -51,11 +59,13 @@ export class UsersController {
     });
   }
 
+  @UseGuards(UserCookieGuard)
   @Get('printForm/:user_id')
   async getPrintUser(@Param('user_id') user_id: number) {
     return this.usersService.getPrintUser(user_id);
   }
 
+  @UseGuards(UserCookieGuard)
   @Get('printExp/:user_id')
   async getPrintExp(@Param('user_id') user_id: number) {
     return this.usersService.getPrintExpbyUser(user_id);
@@ -79,6 +89,7 @@ export class UsersController {
     return this.usersService.createUser(newUserWithExp);
   }
 
+  @UseGuards(UserCookieGuard)
   @Patch(':username')
   async UpdateUserDto(
     @Param('username') username: string,
@@ -97,15 +108,18 @@ export class UsersController {
   //   return this.usersService.validateUser(user_id);
   // }
 
+  @UseGuards(AdminCookieGuard)
   @Patch('validate/:user_id')
   async transactionValidateUser(
     @Param('user_id', ParseIntPipe) user_id: number,
     @Req() request: AdminRequest,
   ) {
-    const approver = request.admin.admin_id;
+    const admin = JSON.parse(JSON.stringify(request.user));
+    const approver = admin.admin_id;
     return this.usersService.transactionValidateUser(user_id, approver);
   }
 
+  @UseGuards(AdminCookieGuard)
   @Delete(':user_id')
   async deleteUserRequest(@Param('user_id', ParseIntPipe) user_id: number) {
     return this.usersService.deleteUserAndRequest(user_id);

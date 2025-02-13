@@ -29,12 +29,14 @@ export class RequestsController {
   //   return this.requestsService.getCurrentStatus(id);
   // }
 
+  @UseGuards(AdminCookieGuard)
   @Post('update')
   async updateStatus(
     @Req() request: AdminRequest,
     @Body() updatedStatus: CreateStatusDto,
   ) {
-    const approver = request.admin.admin_id;
+    const admin = JSON.parse(JSON.stringify(request.user));
+    const approver = admin.admin_id;
     return this.requestsService.updateStatus(updatedStatus, approver);
   }
 
