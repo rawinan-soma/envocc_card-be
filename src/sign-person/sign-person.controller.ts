@@ -45,9 +45,10 @@ export class SignPersonController {
     @Req() request: AdminRequest,
   ) {
     const fileUrl = await this.minio.uploadFileToBucket(file);
+    const admin = JSON.parse(JSON.stringify(request.user));
     data.signature_pix = fileUrl.fileName;
     data.url = fileUrl.url;
-    data.update_admin = request.admin.admin_id;
+    data.update_admin = admin.admin_id;
     return this.signPersonService.addSignPerson(data);
   }
 }

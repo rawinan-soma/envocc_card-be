@@ -39,10 +39,11 @@ export class SealsController {
     @Req() request: AdminRequest,
   ) {
     const data: CreateSealDto = new CreateSealDto();
+    const admin = JSON.parse(JSON.stringify(request.user));
     const fileUrl = await this.minio.uploadFileToBucket(file);
     data.seal_pix = fileUrl.fileName;
     data.url = fileUrl.url;
-    data.update_admin = request.admin.admin_id;
+    data.update_admin = admin.admin_id;
     data.seal_name = seal_name;
 
     return this.sealsService.createSeal(data);

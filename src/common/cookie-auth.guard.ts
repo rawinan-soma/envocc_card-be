@@ -8,6 +8,9 @@ export class CookieAuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+    console.log(request.cookies);
+    console.log('COOKIESAUTH: ', user);
+    console.log('COOKIESAUTH recieve header', request.headers);
 
     if (!user) {
       return false;

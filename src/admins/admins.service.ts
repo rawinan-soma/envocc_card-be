@@ -156,10 +156,11 @@ export class AdminsService {
     }
   }
 
-  async getAdminById(id: number): Promise<admins | null> {
+  async getAdminById(id: number) {
     try {
       const admin = await this.prismaService.admins.findUnique({
         where: { admin_id: id },
+        omit: { password: true },
       });
 
       return admin;

@@ -3,19 +3,23 @@ import { Inject, Injectable } from '@nestjs/common';
 import * as Minio from 'minio';
 import { extname } from 'path';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MinioService {
   private readonly client: Minio.Client;
   private readonly bucketName: string;
 
-  constructor(@Inject('MINIO_BUCKET_NAME') bucketName: string) {
+  constructor(
+    @Inject('MINIO_BUCKET_NAME') bucketName: string,
+    private configService: ConfigService,
+  ) {
     this.bucketName = bucketName;
 
     this.client = new Minio.Client({
-      // endPoint: 'localhost',
-      endPoint: 'minio',
-      port: 9000,
+      endPoint: this.configService.get('MINIO_ENDPOINT'),
+      // endPoint: 'minio',
+      port: this.configService.get('MINIO_PORT'),
       useSSL: false,
       accessKey: 'minioadmin',
       secretKey: 'minioadmin',

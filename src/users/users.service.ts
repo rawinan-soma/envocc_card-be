@@ -8,7 +8,7 @@ import {
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Prisma, users } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { CreateMainDto } from './dto/create-main.dto';
 import { ExperiencesService } from 'src/experiences/experiences.service';
@@ -88,8 +88,6 @@ export class UsersService {
 
         adminLevelFilter.institutions.department = selectedDep.department;
       }
-
-      console.log(adminLevelFilter);
 
       const limit = 10;
       const offset = (queryData.page - 1) * limit;
@@ -287,10 +285,11 @@ export class UsersService {
     }
   }
 
-  async getUserById(id: number): Promise<users | null> {
+  async getUserById(id: number) {
     try {
       const user = await this.prismaService.users.findUnique({
         where: { user_id: id },
+        omit: { password: true },
       });
 
       return user;

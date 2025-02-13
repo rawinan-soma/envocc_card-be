@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UserAuthService } from './user-auth.service';
 import { UserAuthController } from './user-auth.controller';
-// import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
-import { UserSerializer } from './user-serializer';
 import { ExperiencesModule } from 'src/experiences/experiences.module';
 import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';

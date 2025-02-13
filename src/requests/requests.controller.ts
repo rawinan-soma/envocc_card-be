@@ -35,7 +35,8 @@ export class RequestsController {
     @Req() request: AdminRequest,
     @Body() updatedStatus: CreateStatusDto,
   ) {
-    const approver = request.admin.admin_id;
+    const admin = JSON.parse(JSON.stringify(request.user));
+    const approver = admin.admin_id;
     return this.requestsService.updateStatus(updatedStatus, approver);
   }
 

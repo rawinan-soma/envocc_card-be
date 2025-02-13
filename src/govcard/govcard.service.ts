@@ -2,7 +2,6 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateGovcardDto } from './dto/create-govcard.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
-import * as fs from 'fs';
 import { randomFilename } from 'src/common/randomFilename';
 
 @Injectable()

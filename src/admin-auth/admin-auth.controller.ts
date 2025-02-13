@@ -19,7 +19,8 @@ export class AdminAuthController {
   @UseGuards(AdminLocalGuard)
   @Post('login')
   async logIn(@Req() request: AdminRequest) {
-    console.log(request.sessionID);
+    console.log('LOGIN SESSION_ID: ', request.sessionID);
+    console.log('Login complete');
     return request.session;
   }
 
@@ -27,6 +28,9 @@ export class AdminAuthController {
   @UseGuards(AdminCookieGuard)
   @Get()
   async authentication(@Req() request: AdminRequest) {
+    console.log('LOGIN SESSION_ID FROM ADMIN_AUTH: ', request.sessionID);
+    console.log('GET ADMIN-AUTH: ', request.user);
+    console.log('end ADMIN-AUTH');
     return request.session;
   }
 
@@ -34,11 +38,15 @@ export class AdminAuthController {
   @UseGuards(AdminCookieGuard)
   @Post('logout')
   async logOut(@Req() request: AdminRequest) {
+    console.log('ATTEMPT Logout by user: ', request.user);
+
     request.logOut((error) => {
       return error;
     });
 
     request.session.cookie.maxAge = 0;
+
+    console.log('LOGOUT complete');
     return { msg: 'logout' };
   }
 }

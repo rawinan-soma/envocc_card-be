@@ -35,11 +35,18 @@ export class UsersController {
     @Query('lname_th') lname_th?: string,
     @Query('institution_name') institution_name?: string,
   ) {
+    console.log('START REQUEST');
+    const admin = JSON.parse(JSON.stringify(request.user));
+    console.log('REQUEST SESSION_ID GET /USER: ', request.sessionID);
+    console.log('FROM GET USER: ', request.user);
+
     const pageNumber =
       page == '0' || !page || page.match(/[a-zA-Z]/) ? 1 : parseInt(page, 10);
 
-    const adminLevel = request.admin.level;
-    const adminInst = request.admin.institution;
+    // const adminLevel = 1;
+    const adminLevel = admin.level;
+    // const adminInst = 1;
+    const adminInst = admin.institution;
 
     return this.usersService.getAllUsers({
       adminLevel: adminLevel,
@@ -107,7 +114,8 @@ export class UsersController {
     @Param('user_id', ParseIntPipe) user_id: number,
     @Req() request: AdminRequest,
   ) {
-    const approver = request.admin.admin_id;
+    const admin = JSON.parse(JSON.stringify(request.user));
+    const approver = admin.admin_id;
     return this.usersService.transactionValidateUser(user_id, approver);
   }
 
