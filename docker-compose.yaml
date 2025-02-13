@@ -76,7 +76,7 @@ services:
       dockerfile: Dockerfile
       target: prod
     env_file:
-      - /src/dev-docker.env
+      - ./src/dev-docker.env
     ports:
       - '3002:3002'
     depends_on:

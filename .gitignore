@@ -43,6 +43,7 @@ lerna-debug.log*
 .env.local
 docker.env
 seeder.env
+dev-docker.env
 
 # temp directory
 .temp
