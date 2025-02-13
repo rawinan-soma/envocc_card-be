@@ -61,25 +61,12 @@ async function main() {
       data: position_lvls,
     });
 
-    await tx.admins.create({
-      data: {
-        email: 'testemail@mainModule.com',
-        fname: 'ทดสอบ',
-        lname: 'ทดสอบ',
-        password:
-          '$2a$10$G2YUwq1YyF4dSxcem/62qu2uzFg7zoMTrlyhTjov5hgCMPXc3zPz.',
-        pname: 'นาย',
-        private_number: '0990000000',
-        username: 'test01',
-        work_number: '022000000',
-        level: 1,
-        admin_id: 1,
-        create_date: new Date('2024-12-27'),
-        institution: 28,
-        position_lv: 1,
-        position: 4,
-        role: 'admin',
-      },
+    const admins = JSON.parse(
+      fs.readFileSync('././src/prisma/data/admins.json', 'utf-8'),
+    );
+
+    await tx.admins.createMany({
+      data: admins,
     });
 
     const epositions = JSON.parse(

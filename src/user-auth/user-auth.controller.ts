@@ -26,12 +26,12 @@ export class UserAuthController {
     return request.session;
   }
 
-  // @HttpCode(200)
-  // @UseGuards(UserCookieGuard)
-  // @Get()
-  // async authentication(@Req() request: UserRequest) {
-  //   return request.session;
-  // }
+  @HttpCode(200)
+  @UseGuards(UserCookieGuard)
+  @Get()
+  async authentication(@Req() request: UserRequest) {
+    return request.session;
+  }
 
   @HttpCode(200)
   @UseGuards(UserCookieGuard)
