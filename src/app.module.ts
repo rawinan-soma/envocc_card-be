@@ -70,7 +70,6 @@ import { HealthController } from './health.controller';
     FilesModule,
     UserAuthModule,
     AdminAuthModule,
-    MinioModule,
     SealsModule,
     RequestFileModule,
   ],

@@ -50,34 +50,9 @@ export class ExpsfileService {
 
   async createExpsFile(data: CreateExpsfileDto) {
     try {
-      const existingFile = await this.prismaService.experiences_files.findFirst(
-        {
-          where: { exp_file: data.exp_file },
-        },
-      );
-
-      if (!existingFile) {
-        return await this.prismaService.experiences_files.create({
-          data: data,
-        });
-      } else {
-        let isFileNameUnique: boolean = false;
-        while (!isFileNameUnique) {
-          data.exp_file = randomFilename();
-
-          const existingFile =
-            await this.prismaService.experiences_files.findFirst({
-              where: { exp_file: data.exp_file },
-            });
-
-          if (!existingFile) {
-            isFileNameUnique = true;
-          }
-        }
-        return await this.prismaService.experiences_files.create({
-          data: data,
-        });
-      }
+      return await this.prismaService.experiences_files.create({
+        data: data,
+      });
     } catch (error: any) {
       this.logger.error('ERROR: createExpsFile');
       this.logger.error(error);

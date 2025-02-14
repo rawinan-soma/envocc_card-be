@@ -72,6 +72,6 @@ async function bootstrap() {
 
   app.use(passport.session());
 
-  await app.listen(3002);
+  await app.listen(configService.get('API_PORT'));
 }
 bootstrap();

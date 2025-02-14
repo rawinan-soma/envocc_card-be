@@ -1,7 +1,11 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { randomFilename } from 'src/common/randomFilename';
+
+import { RequestFileServices } from 'src/request-file/request-file.service';
+import { GovcardService } from 'src/govcard/govcard.service';
+import { ExpfileService } from 'src/expfile/expfile.service';
+
+import { PrismaService } from 'src/prisma/prisma.service';
 
 interface MulterOptionsParams {
   allowedExtensions: string[];
@@ -27,5 +31,33 @@ export class FilesService {
         fileSize: allowedSize,
       },
     };
+  }
+}
+
+@Injectable()
+export class UploadService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly requestFile: RequestFileServices,
+    private readonly expFile: ExpfileService,
+    private readonly govCardFile: GovcardService,
+  ) {}
+
+  async transactionUploadAndUpdateRequest(
+    reqFile: Express.Multer.File,
+    gov: Express.Multer.File,
+    exp: Express.Multer.File,
+    user: number,
+  ) {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        await this.requestFile.transactionCreateReqFile(tx, reqFile, user);
+        await this.expFile.transactionCreateExpFile(tx, exp, user);
+        await this.govCardFile.transactionCreateGovCard(tx, gov, user);
+      });
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('Error Uploading Files - See logs');
+    }
   }
 }

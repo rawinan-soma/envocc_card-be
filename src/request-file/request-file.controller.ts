@@ -28,7 +28,7 @@ export class RequestFileController {
   @Post()
   @UseInterceptors(
     FileInterceptor(
-      'request-file',
+      'requestFile',
       new FilesService().getMulterOptions({
         allowedExtensions: ['.pdf'],
         allowedSize: 10 * 1024 * 1024,

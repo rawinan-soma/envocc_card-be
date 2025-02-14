@@ -1,15 +1,57 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateGovcardDto } from './dto/create-govcard.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
-import { randomFilename } from 'src/common/randomFilename';
+import { MinioService } from 'src/minio/minio.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class GovcardService {
   private readonly logger = new Logger(GovcardService.name);
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly minio: MinioService,
+  ) {
+    console.log(
+      `Injected MinioService in GovCardService: ${minio['bucketName']}`,
+    );
+  }
 
+  async transactionCreateGovCard(
+    tx: Prisma.TransactionClient,
+    gov: Express.Multer.File,
+    user: number,
+  ) {
+    let govFilename: string | null = null;
+    try {
+      const uploadGov = await this.minio.uploadFileToBucket(gov);
+      console.log('Upload Gov File');
+      console.log(uploadGov.url);
+
+      govFilename = uploadGov?.fileName;
+
+      const govData: CreateGovcardDto = new CreateGovcardDto();
+      govData.user = user;
+      govData.file_name = uploadGov.fileName;
+      govData.url = uploadGov.url;
+      console.log('Create Metadata: Gov Card');
+      return await tx.gov_card_files.create({ data: govData });
+    } catch (error) {
+      const govFileExisted = await this.minio.getFileFromBucket(govFilename);
+      if (govFileExisted) {
+        await this.minio.deleteDocument(govFilename);
+        console.log('Gov File Existed -> removed');
+      }
+      console.log(error);
+      throw new BadRequestException('Error Upload Gov Card File');
+    }
+  }
   async getGovCardfile(user: number) {
     try {
       const govCard = await this.prismaService.gov_card_files.findFirst({
@@ -47,29 +89,7 @@ export class GovcardService {
 
   async createGovCard(data: CreateGovcardDto) {
     try {
-      const existingFile = await this.prismaService.gov_card_files.findFirst({
-        where: { file_name: data.file_name },
-      });
-
-      if (!existingFile) {
-        return await this.prismaService.gov_card_files.create({ data: data });
-      } else {
-        let isFileNameUnique: boolean = false;
-        while (!isFileNameUnique) {
-          data.file_name = randomFilename();
-
-          const existingFile =
-            await this.prismaService.gov_card_files.findFirst({
-              where: { file_name: data.file_name },
-            });
-
-          if (!existingFile) {
-            isFileNameUnique = true;
-          }
-        }
-
-        return await this.prismaService.gov_card_files.create({ data: data });
-      }
+      return await this.prismaService.gov_card_files.create({ data: data });
     } catch (error: any) {
       this.logger.error('ERROR: createGovCard');
       this.logger.error(error);

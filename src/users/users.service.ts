@@ -13,7 +13,6 @@ import { serviceErrorHandler } from 'src/common/services.error.handler';
 import { CreateMainDto } from './dto/create-main.dto';
 import { ExperiencesService } from 'src/experiences/experiences.service';
 import * as bcrypt from 'bcryptjs';
-import { CreateNewRequestDto } from 'src/requests/dto/create-new-request.dto';
 import { RequestsService } from 'src/requests/requests.service';
 import { CreateStatusDto } from 'src/requests/dto/create-status.dto';
 

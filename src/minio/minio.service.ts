@@ -15,6 +15,8 @@ export class MinioService {
     private configService: ConfigService,
   ) {
     this.bucketName = bucketName;
+    console.log('USING Minio Bucket: ', this.bucketName);
+    console.trace();
 
     this.client = new Minio.Client({
       endPoint: this.configService.get('MINIO_ENDPOINT'),
@@ -58,6 +60,7 @@ export class MinioService {
       };
       // return fileName;
     } catch (error) {
+      console.log(error);
       serviceErrorHandler(error);
     }
   }
