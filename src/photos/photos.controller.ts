@@ -16,8 +16,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from 'src/files/files.service';
 import { MinioService } from 'src/minio/minio.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
+import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 
-@UseGuards(AdminCookieGuard)
 @Controller('photos')
 export class PhotosController {
   constructor(
@@ -25,12 +25,13 @@ export class PhotosController {
     private readonly minio: MinioService,
   ) {}
 
+  @UseGuards(UserCookieGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor(
       'photo',
       new FilesService().getMulterOptions({
-        allowedExtensions: ['.pdf'],
+        allowedExtensions: ['.jpg', '.png'],
         allowedSize: 10 * 1024 * 1024,
       }),
     ),
@@ -47,11 +48,13 @@ export class PhotosController {
     return this.photosService.createPhoto(data);
   }
 
+  @UseGuards(AdminCookieGuard)
   @Get(':user_id')
   async getPhotoByUser(@Param('user_id', ParseIntPipe) user_id: number) {
     return (await this.photosService.getPhotoByUser(user_id)).url;
   }
 
+  @UseGuards(AdminCookieGuard)
   @Delete(':user_id')
   async deletePhoto(@Param('user_id', ParseIntPipe) user_id: number) {
     const file = await this.photosService.getPhotoByUser(user_id);

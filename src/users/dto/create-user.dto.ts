@@ -70,6 +70,7 @@ export class CreateUserDto {
   house_number1: string;
 
   @IsNumber()
+  @Type(() => Number)
   moo1: number;
 
   @IsString()
@@ -79,21 +80,26 @@ export class CreateUserDto {
   road1: string;
 
   @IsNumber()
+  @Type(() => Number)
   province1: number;
 
   @IsNumber()
+  @Type(() => Number)
   amphures1: number;
 
   @IsNumber()
+  @Type(() => Number)
   district1: number;
 
   @IsNumber()
+  @Type(() => Number)
   zip_code1: number;
 
   @IsString()
   house_number2: string;
 
   @IsNumber()
+  @Type(() => Number)
   moo2: number;
 
   @IsString()
@@ -103,30 +109,39 @@ export class CreateUserDto {
   road2: string;
 
   @IsNumber()
+  @Type(() => Number)
   province2: number;
 
   @IsNumber()
+  @Type(() => Number)
   amphures2: number;
 
   @IsNumber()
+  @Type(() => Number)
   district2: number;
 
   @IsNumber()
+  @Type(() => Number)
   zip_code2: number;
 
   @IsNumber()
+  @Type(() => Number)
   institution: number;
 
   @IsNumber()
+  @Type(() => Number)
   eposition: number;
 
   @IsNumber()
+  @Type(() => Number)
   position: number;
 
   @IsNumber()
+  @Type(() => Number)
   position_lv: number;
 
   @IsNumber()
+  @Type(() => Number)
   e_learning: number;
 
   @IsBoolean()

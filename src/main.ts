@@ -17,7 +17,7 @@ async function bootstrap() {
     cors: {
       origin: ['http://localhost:3000', 'http://203.157.41.59:3000'],
       credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'cookie'],
       methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     },
   });

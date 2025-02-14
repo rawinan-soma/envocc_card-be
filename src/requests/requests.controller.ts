@@ -1,12 +1,13 @@
 import {
   Controller,
-  // Get,
-  // Param,
+  Get,
+  Param,
   Req,
   Body,
   Post,
   // Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { RequestsService } from './requests.service';
 // import LogInRequest from 'src/admin-auth/log-in-request.interface';
@@ -14,6 +15,7 @@ import { CreateStatusDto } from './dto/create-status.dto';
 // import { CreateNewRequestDto } from './dto/create-new-request.dto';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import AdminRequest from 'src/admin-auth/admin-request.interface';
+import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 
 @Controller('requests')
 export class RequestsController {
@@ -24,12 +26,14 @@ export class RequestsController {
   //   return this.requestsService.getAllLatestStatuses();
   // }
 
-  // @Get('users/:id')
-  // async getCurrentStatus(@Param('id') id: number) {
-  //   return this.requestsService.getCurrentStatus(id);
-  // }
+  @UseGuards(UserCookieGuard)
+  @Get('users/:user_id')
+  async getCurrentStatus(@Param('user_id', ParseIntPipe) user_id: number) {
+    return this.requestsService.getCurrentStatus(user_id);
+  }
 
-  @UseGuards(AdminCookieGuard)
+  @UseGuards(UserCookieGuard)
+  // @UseGuards(AdminCookieGuard)
   @Post('update')
   async updateStatus(
     @Req() request: AdminRequest,

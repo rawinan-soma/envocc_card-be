@@ -1,5 +1,6 @@
 import { IsEmail, IsNumber, IsString, Matches } from 'class-validator';
 import { ThaiNamePrefix } from '../../users/users.enum';
+import { Type } from 'class-transformer';
 
 export class CreateAdminDto {
   @IsString()
@@ -9,9 +10,11 @@ export class CreateAdminDto {
   password: string;
 
   @IsNumber()
+  @Type(() => Number)
   institution: number;
 
   @IsNumber()
+  @Type(() => Number)
   level: number;
 
   @IsString()
@@ -35,8 +38,10 @@ export class CreateAdminDto {
   email: string;
 
   @IsNumber()
+  @Type(() => Number)
   position: number;
 
   @IsNumber()
+  @Type(() => Number)
   position_lv: number;
 }

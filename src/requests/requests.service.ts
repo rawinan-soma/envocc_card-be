@@ -59,7 +59,7 @@ export class RequestsService {
       });
     } catch (error: any) {
       this.logger.error('ERROR: updateStatus');
-      this.logger.error(error);
+      console.log(error);
 
       serviceErrorHandler(error);
     }

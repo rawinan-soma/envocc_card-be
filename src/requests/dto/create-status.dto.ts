@@ -1,7 +1,9 @@
 import { IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateStatusDto {
   @IsNumber()
+  @Type(() => Number)
   user: number;
   @IsNumber()
   current_status: number;

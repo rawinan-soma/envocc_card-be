@@ -1,9 +1,11 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class CreateMemberDto {
   @IsNumber()
+  @Type(() => Number)
   user: number;
 
+  @Type(() => Number)
   signer: number;
 }

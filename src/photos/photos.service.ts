@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
@@ -32,12 +37,19 @@ export class PhotosService {
 
   async createPhoto(data: CreatePhotoDto) {
     try {
+      const existedUserPhoto = await this.prismaService.photos.findFirst({
+        where: { user: data.user },
+      });
+
+      if (existedUserPhoto) {
+        throw new BadRequestException('This User already has Photo');
+      }
       return await this.prismaService.photos.create({
         data: data,
       });
     } catch (error: any) {
       this.logger.error('ERROR: createPhoto');
-      this.logger.error(error);
+      console.log(error);
       serviceErrorHandler(error);
     }
   }

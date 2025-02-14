@@ -16,9 +16,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from 'src/files/files.service';
 import { MinioService } from 'src/minio/minio.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
+import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 // import LogInRequest from 'src/user-auth/log-in-request.interface';
 
-@UseGuards(AdminCookieGuard)
 @Controller('envcard')
 export class EnvcardController {
   constructor(
@@ -26,6 +26,7 @@ export class EnvcardController {
     private readonly minioService: MinioService,
   ) {}
 
+  @UseGuards(UserCookieGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor(
@@ -50,11 +51,13 @@ export class EnvcardController {
     return this.envcardService.createCardFile(data);
   }
 
+  @UseGuards(AdminCookieGuard)
   @Get(':user_id')
   async getEnvCard(@Param('user_id', ParseIntPipe) user_id: number) {
     return (await this.envcardService.getCardFile(user_id)).url;
   }
 
+  @UseGuards(AdminCookieGuard)
   @Delete(':user_id')
   async deleteEnvCard(@Param('user_id', ParseIntPipe) user_id: number) {
     const file = await this.envcardService.getCardFile(user_id);

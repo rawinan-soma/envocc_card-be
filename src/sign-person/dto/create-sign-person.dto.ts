@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateSignPersonDto {
@@ -16,9 +17,11 @@ export class CreateSignPersonDto {
   position: string;
 
   @IsNumber()
+  @Type(() => Number)
   update_admin?: number;
 
   @IsNumber()
+  @Type(() => Number)
   institution: number;
 
   url?: string;

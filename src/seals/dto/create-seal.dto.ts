@@ -1,7 +1,9 @@
+import { Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateSealDto {
   @IsNumber()
+  @Type(() => Number)
   update_admin: number;
 
   @IsString()
