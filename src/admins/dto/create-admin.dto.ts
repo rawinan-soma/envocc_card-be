@@ -14,8 +14,8 @@ export class CreateAdminDto {
   institution: number;
 
   @IsNumber()
-  @Type(() => Number)
-  level: number;
+  // @Type(() => Number)
+  admin_level: number;
 
   @IsString()
   pname: ThaiNamePrefix;

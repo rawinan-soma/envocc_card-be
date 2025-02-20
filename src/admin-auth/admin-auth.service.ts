@@ -10,7 +10,7 @@ export class AdminAuthService {
   public async getAuthenticatedAdmin(username: string, password: string) {
     try {
       const admin = await this.admins.getAdminByUsername(username);
-      await this.checkUserValidation(admin);
+      this.checkUserValidation(admin);
       await this.verifyPassword(password, admin.password);
 
       return admin;
@@ -19,7 +19,7 @@ export class AdminAuthService {
     }
   }
 
-  private async checkUserValidation(user: any) {
+  private checkUserValidation(user: any) {
     if (user.is_validate === false) {
       throw new UnauthorizedException('User did not validate by Admin');
     }

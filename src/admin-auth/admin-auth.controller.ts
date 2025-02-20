@@ -29,7 +29,7 @@ export class AdminAuthController {
   @Get()
   async authentication(@Req() request: AdminRequest) {
     console.log('LOGIN SESSION_ID FROM ADMIN_AUTH: ', request.sessionID);
-    console.log('GET ADMIN-AUTH: ', request.user);
+    // console.log('GET ADMIN-AUTH: ', request.user);
     console.log('end ADMIN-AUTH');
     return request.session;
   }
@@ -38,7 +38,7 @@ export class AdminAuthController {
   @UseGuards(AdminCookieGuard)
   @Post('logout')
   async logOut(@Req() request: AdminRequest) {
-    console.log('ATTEMPT Logout by user: ', request.user);
+    // console.log('ATTEMPT Logout by user: ', request.user);
 
     request.logOut((error) => {
       return error;

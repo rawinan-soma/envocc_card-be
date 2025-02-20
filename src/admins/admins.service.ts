@@ -8,7 +8,6 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import { admins } from '@prisma/client';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
 import * as bcrypt from 'bcryptjs';
 
@@ -18,6 +17,7 @@ export class AdminsService {
 
   constructor(private readonly prismaService: PrismaService) {}
 
+  // #TODO: Pagination in production
   async getAllAdmins() {
     try {
       const admins = await this.prismaService.admins.findMany({
@@ -76,8 +76,23 @@ export class AdminsService {
       const hashedPassword = await bcrypt.hash(data.password, 10);
       data.password = hashedPassword;
 
+      console.log(data);
+
       return await this.prismaService.admins.create({
-        data: { ...data },
+        data: {
+          email: data.email,
+          fname: data.fname,
+          lname: data.lname,
+          password: data.password,
+          pname: data.pname,
+          private_number: data.private_number,
+          username: data.username,
+          work_number: data.work_number,
+          institution: data.institution,
+          level: data.admin_level,
+          position: data.position,
+          position_lv: data.position_lv,
+        },
       });
     } catch (error: any) {
       this.logger.error('ERROR: createUser');

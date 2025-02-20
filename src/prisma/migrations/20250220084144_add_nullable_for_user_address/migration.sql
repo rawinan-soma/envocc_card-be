@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `users` MODIFY `moo1` INTEGER NULL,
+    MODIFY `moo2` INTEGER NULL;

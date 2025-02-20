@@ -55,7 +55,6 @@ export class CreateUserDto {
   blood: BloodGroup;
 
   @IsString()
-  @Matches(/^0[0-9]{8}$/, { message: 'Invalid work number' })
   work_number: string;
 
   @IsString()
@@ -69,15 +68,14 @@ export class CreateUserDto {
   @IsString()
   house_number1: string;
 
-  @IsNumber()
   @Type(() => Number)
-  moo1: number;
+  moo1?: number | null;
 
   @IsString()
-  alley1: string;
+  alley1?: string | null;
 
   @IsString()
-  road1: string;
+  road1?: string | null;
 
   @IsNumber()
   @Type(() => Number)
@@ -98,15 +96,14 @@ export class CreateUserDto {
   @IsString()
   house_number2: string;
 
-  @IsNumber()
   @Type(() => Number)
-  moo2: number;
+  moo2?: number | null;
 
   @IsString()
-  alley2: string;
+  alley2?: string | null;
 
   @IsString()
-  road2: string;
+  road2?: string | null;
 
   @IsNumber()
   @Type(() => Number)
