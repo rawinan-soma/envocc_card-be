@@ -7,11 +7,13 @@ import {
   Param,
   UseGuards,
   ParseIntPipe,
+  Req,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+import AdminRequest from 'src/admin-auth/admin-request.interface';
 
 @Controller('members')
 export class MembersController {
@@ -43,7 +45,7 @@ export class MembersController {
   @UseGuards(UserCookieGuard)
   @Patch('qrpassword/:user_id')
   async setQRPassword(
-    @Param('user_id') user_id: number,
+    @Param('user_id', ParseIntPipe) user_id: number,
     @Body('password') password: string,
   ) {
     return this.membersService.setQrPassword(user_id, password);
@@ -54,9 +56,27 @@ export class MembersController {
     return this.membersService.getMemberByQrcode(qrcode_no);
   }
 
+  @Post('qrcode/:qrcode_no/validate')
+  async validateQrCode(
+    @Body('password') password: string,
+    @Param('qrcode_no') qrcode: string,
+  ) {
+    return this.membersService.validateQrCode(qrcode, password);
+  }
+
   @UseGuards(AdminCookieGuard)
   @Patch('startDate/:user_id')
-  async updateStartDate(@Param() user_id: number, @Body() startDate: string) {
-    return this.membersService.updateStartDate(user_id, startDate);
+  async updateStartDate(
+    @Param('user_id', ParseIntPipe) user_id: number,
+    @Body('startDate') startDate: string,
+    @Req() request: AdminRequest,
+  ) {
+    const admin = JSON.parse(JSON.stringify(request.user));
+    const approver = admin.admin_id;
+    return this.membersService.transactionUpdateStartDate(
+      user_id,
+      startDate,
+      approver,
+    );
   }
 }

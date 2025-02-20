@@ -18,9 +18,9 @@ export class ExpfileService {
     private readonly prismaService: PrismaService,
     private readonly minio: MinioService,
   ) {
-    console.log(
-      `Injected MinioService in ExpfileService: ${minio['bucketName']}`,
-    );
+    // console.log(
+    //   `Injected MinioService in ExpfileService: ${minio['bucketName']}`,
+    // );
   }
 
   async transactionCreateExpFile(

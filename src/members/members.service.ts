@@ -3,15 +3,22 @@ import {
   Logger,
   NotFoundException,
   BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
+import { EnvcardService } from 'src/envcard/envcard.service';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class MembersService {
   private readonly logger = new Logger(MembersService.name);
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly minio: MinioService,
+    private readonly envcard: EnvcardService,
+  ) {}
 
   async getAllMembers() {
     try {
@@ -164,18 +171,25 @@ export class MembersService {
         orderBy: { start_date: 'desc' },
         select: { member_id: true, is_active: true, qrcode_pass: true },
       });
-      const hasPassword = selectedMember.qrcode_pass !== '';
-      if (hasPassword) {
-        throw new BadRequestException('This card already has password');
-      } else {
-        return this.prismaService.members.update({
-          where: { member_id: selectedMember.member_id },
-          data: { qrcode_pass: password },
-          omit: {
-            qrcode_pass: true,
-          },
-        });
-      }
+      return this.prismaService.members.update({
+        where: { member_id: selectedMember.member_id },
+        data: { qrcode_pass: password },
+        omit: {
+          qrcode_pass: true,
+        },
+      });
+      // const hasPassword = selectedMember.qrcode_pass !== '';
+      // if (hasPassword) {
+      //   throw new BadRequestException('This card already has password');
+      // } else {
+      //   return this.prismaService.members.update({
+      //     where: { member_id: selectedMember.member_id },
+      //     data: { qrcode_pass: password },
+      //     omit: {
+      //       qrcode_pass: true,
+      //     },
+      //   });
+      // }
     } catch (error: any) {
       this.logger.error('ERROR: SetQRPassword');
       this.logger.error(error);
@@ -185,10 +199,90 @@ export class MembersService {
   }
 
   async getMemberByQrcode(qrcode_no: string) {
-    return this.prismaService.members.findFirst({
-      where: { qrcode: qrcode_no },
-      select: { user: true },
-    });
+    try {
+      return this.prismaService.members.findFirst({
+        where: { qrcode: qrcode_no },
+        select: { user: true },
+      });
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
+
+  async validateQrCode(qrcode: string, inputPassword: string) {
+    try {
+      const member = await this.prismaService.members.findFirst({
+        where: { qrcode: qrcode },
+      });
+
+      if (member.qrcode_pass !== inputPassword) {
+        throw new UnauthorizedException('Password incorrect');
+      }
+
+      const fileName = await this.envcard.getCardFile(member.user);
+
+      return this.minio.getPresignedUrl(fileName.file_card_name, 5 * 60);
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
+
+  async transactionUpdateStartDate(
+    user: number,
+    start_date: string,
+    approver: number,
+  ) {
+    try {
+      return this.prismaService.$transaction(async (tx) => {
+        console.log(user);
+        const targetMember = await tx.members.findFirst({
+          where: { user: user },
+          orderBy: { create_date: 'desc' },
+          select: { member_id: true },
+        });
+
+        console.log(start_date);
+
+        const startDate = new Date(start_date);
+        const endDate: Date = new Date(start_date);
+        endDate.setFullYear(startDate.getFullYear() + 5);
+        endDate.setDate(endDate.getDate() - 1);
+
+        console.log(startDate);
+        console.log(endDate);
+
+        await tx.members.update({
+          where: { member_id: targetMember.member_id },
+          data: { start_date: startDate, end_date: endDate },
+        });
+
+        const current = await tx.requests.findFirst({
+          where: { user: user },
+          orderBy: { date_update: 'desc' },
+        });
+
+        const isReady =
+          current.request_status === 8 || current.request_status === 11;
+
+        if (isReady) {
+          return await tx.requests.create({
+            data: {
+              user: user,
+              request_type: 1,
+              request_status: current.request_status + 1,
+              approver: approver,
+            },
+          });
+        } else {
+          throw new BadRequestException('Error Setting start date see-logs');
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(error);
+    }
   }
 
   async updateStartDate(user_id: number, start_date: string) {
@@ -203,7 +297,7 @@ export class MembersService {
     endDate.setFullYear(startDate.getFullYear() + 5);
     endDate.setDate(endDate.getDate() - 1);
 
-    return this.prismaService.members.update({
+    return await this.prismaService.members.update({
       where: { member_id: targetMember.member_id },
       data: { start_date: startDate, end_date: endDate },
     });

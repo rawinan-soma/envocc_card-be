@@ -41,6 +41,7 @@ model admins {
   email          String   @unique @db.VarChar(255)
   position       Int
   position_lv    Int
+  is_validate    Boolean  @default(true)
   create_date    DateTime @default(now()) @db.DateTime(0)
 
   access_levels     access_levels       @relation(fields: [level], references: [level_id], onDelete: Cascade, onUpdate: NoAction, map: "admins_ibfk_1")
@@ -285,7 +286,7 @@ model sign_persons {
   signature_pix      String   @unique @db.VarChar(255)
   url                String?
   position           String   @db.VarChar(255)
-  sign_person_active Boolean
+  sign_person_active Boolean  @default(true)
   date_update        DateTime @default(now()) @db.DateTime(0)
   update_admin       Int
 

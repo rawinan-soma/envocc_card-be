@@ -16,6 +16,7 @@ import { CreateStatusDto } from './dto/create-status.dto';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import AdminRequest from 'src/admin-auth/admin-request.interface';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
 @Controller('requests')
 export class RequestsController {
@@ -32,8 +33,9 @@ export class RequestsController {
     return this.requestsService.getCurrentStatus(user_id);
   }
 
-  @UseGuards(UserCookieGuard)
+  // @UseGuards(UserCookieGuard)
   // @UseGuards(AdminCookieGuard)
+  @UseGuards(CookieAuthGuard)
   @Post('update')
   async updateStatus(
     @Req() request: AdminRequest,

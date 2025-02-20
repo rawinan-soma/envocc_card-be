@@ -8,9 +8,9 @@ export class CookieAuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    console.log(request.cookies);
-    console.log('COOKIESAUTH: ', user);
-    console.log('COOKIESAUTH recieve header', request.headers);
+    // console.log(request.cookies);
+    // console.log('COOKIESAUTH: ', user);
+    // console.log('COOKIESAUTH recieve header', request.headers);
 
     if (!user) {
       return false;
@@ -21,7 +21,15 @@ export class CookieAuthGuard implements CanActivate {
 
   // TODO: Enhance with soft delete
   protected validateUser(user: any): boolean {
-    console.log('FROM COOKIEAUTH Checking user: ', user);
-    return !!user && (user.role === 'user' || user.role === 'admin');
+    console.log('FROM COOKIEAUTH Checking user:');
+    console.log(
+      'CHECKING AT COOKIEAUTHGUARD: ',
+      !!user && (user.role === 'user' || user.role === 'admin'),
+    );
+    return (
+      !!user &&
+      (user.role === 'user' || user.role === 'admin') &&
+      user.is_validate === true
+    );
   }
 }

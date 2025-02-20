@@ -18,10 +18,10 @@ export class RequestFileServices {
     private readonly prisma: PrismaService,
     private readonly minio: MinioService,
   ) {
-    console.log(
-      `Injected MinioService in RequestFileServices: ${minio['bucketName']}`,
-    );
-    console.trace();
+    // console.log(
+    //   `Injected MinioService in RequestFileServices: ${minio['bucketName']}`,
+    // );
+    // console.trace();
   }
 
   async transactionCreateReqFile(

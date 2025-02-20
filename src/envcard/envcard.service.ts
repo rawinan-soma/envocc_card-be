@@ -1,9 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEnvcardDto } from './dto/create-envcard.dto';
-import * as fs from 'fs';
 import { serviceErrorHandler } from 'src/common/services.error.handler';
-import { randomFilename } from 'src/common/randomFilename';
 
 @Injectable()
 export class EnvcardService {

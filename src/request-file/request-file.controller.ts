@@ -48,7 +48,7 @@ export class RequestFileController {
     return this.requestFileService.createReqFile(data);
   }
 
-  @Get('user_id')
+  @Get(':user_id')
   async getReqFile(@Param('user_id', ParseIntPipe) user_id: number) {
     return (await this.requestFileService.getReqFile(user_id)).url;
   }

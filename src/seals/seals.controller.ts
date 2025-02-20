@@ -35,7 +35,7 @@ export class SealsController {
   )
   async insertSeal(
     @UploadedFile() file: Express.Multer.File,
-    @Body() seal_name: string,
+    @Body('seal_name') seal_name: string,
     @Req() request: AdminRequest,
   ) {
     const data: CreateSealDto = new CreateSealDto();

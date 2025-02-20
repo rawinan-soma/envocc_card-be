@@ -17,6 +17,7 @@ import { FilesService } from 'src/files/files.service';
 import { MinioService } from 'src/minio/minio.service';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+
 // import LogInRequest from 'src/user-auth/log-in-request.interface';
 
 @Controller('envcard')
@@ -51,10 +52,11 @@ export class EnvcardController {
     return this.envcardService.createCardFile(data);
   }
 
-  @UseGuards(AdminCookieGuard)
   @Get(':user_id')
   async getEnvCard(@Param('user_id', ParseIntPipe) user_id: number) {
-    return (await this.envcardService.getCardFile(user_id)).url;
+    const file = await this.envcardService.getCardFile(user_id);
+    const filename = file.file_card_name;
+    return `203.157.41.59:9000/envcard/${filename}`;
   }
 
   @UseGuards(AdminCookieGuard)

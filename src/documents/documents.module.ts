@@ -8,11 +8,10 @@ import { MinioModule } from 'src/minio/minio.module';
 import { GetdocumentController } from './getdocument.controller';
 
 @Module({
-  imports: [FilesModule, MinioModule],
+  imports: [MinioModule],
   controllers: [DocumentsController, GetdocumentController],
   providers: [
     DocumentsService,
-    FilesService,
     MinioService,
     {
       provide: 'MINIO_BUCKET_NAME',

@@ -53,11 +53,6 @@ export class ExpsfileController {
     return this.expsfileService.createExpsFile(data);
   }
 
-  @Get(':admin')
-  async getExpsFile(@Param('admin', ParseIntPipe) admin: number) {
-    return await this.expsfileService.getAllFilesOneAdmins(admin);
-  }
-
   @Delete(':experiences_file_id')
   async deleteExpsFile(
     @Param('experiences_file_id', ParseIntPipe) experiences_file_id: number,

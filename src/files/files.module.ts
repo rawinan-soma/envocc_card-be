@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, Global, forwardRef } from '@nestjs/common';
 
 import { FilesService, UploadService } from './files.service';
 import { FilesController } from './files.controller';
@@ -35,13 +35,7 @@ import { MinioModule } from 'src/minio/minio.module';
 @Module({
   imports: [RequestFileModule, ExpfileModule, GovcardModule, MinioModule],
   controllers: [FilesController],
-  providers: [
-    FilesService,
-    UploadService,
-    RequestFileServices,
-    ExpfileService,
-    GovcardService,
-  ],
+  providers: [FilesService, UploadService],
   exports: [FilesService],
 })
 export class FilesModule {}

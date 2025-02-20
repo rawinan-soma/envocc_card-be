@@ -15,8 +15,120 @@ export class MinioService {
     private configService: ConfigService,
   ) {
     this.bucketName = bucketName;
-    console.log('USING Minio Bucket: ', this.bucketName);
-    console.trace();
+    // console.log('USING Minio Bucket: ', this.bucketName);
+    // console.trace();
+
+    this.client = new Minio.Client({
+      endPoint: this.configService.get('MINIO_ENDPOINT'),
+      // endPoint: 'minio',
+      port: this.configService.get('MINIO_PORT'),
+      useSSL: false,
+      accessKey: 'minioadmin',
+      secretKey: 'minioadmin',
+    });
+
+    this.createBucket();
+  }
+
+  async createBucket() {
+    try {
+      const existBucket = await this.client.bucketExists(this.bucketName);
+
+      if (!existBucket) {
+        await this.client.makeBucket(this.bucketName);
+        console.log(`${this.bucketName} created!!`);
+      }
+
+      this.setPublic();
+    } catch (error) {
+      console.log('ERROR creating bucket');
+      console.log(error);
+    }
+  }
+
+  async uploadFileToBucket(file: Express.Multer.File) {
+    try {
+      // const fileStream = fs.createReadStream(file.path);
+      const suffix: string = Date.now() + '-' + randomFilename();
+      const fileName = `${suffix}${extname(file.originalname)}`;
+
+      await this.client.putObject(
+        this.bucketName,
+        fileName,
+        file.buffer,
+        file.size,
+        { 'Content-Type': file.mimetype },
+      );
+      return {
+        url: `${this.configService.get('MINIO_ENDPOINT')}:9000/${this.bucketName}/${fileName}`,
+        fileName: fileName,
+      };
+      // return fileName;
+    } catch (error) {
+      console.log(error);
+      serviceErrorHandler(error);
+    }
+  }
+
+  async getFileFromBucket(filename: string) {
+    return await this.client.getObject(this.bucketName, filename);
+  }
+
+  async getPresignedUrl(filename: string, expire_second = 300) {
+    try {
+      return await this.client.presignedGetObject(
+        this.bucketName,
+        filename,
+        expire_second,
+      );
+    } catch (error) {
+      serviceErrorHandler(error);
+    }
+  }
+
+  async deleteDocument(fileName: string) {
+    try {
+      return await this.client.removeObject(this.bucketName, fileName);
+    } catch (error) {
+      serviceErrorHandler(error);
+    }
+  }
+
+  async setPublic() {
+    try {
+      const policy = {
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Effect: 'Allow',
+            Principal: { AWS: ['*'] },
+            Action: ['s3:GetObject'],
+            Resource: [`arn:aws:s3:::${this.bucketName}/*`],
+          },
+        ],
+      };
+      await this.client.setBucketPolicy(
+        this.bucketName,
+        JSON.stringify(policy),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+@Injectable()
+export class PrivateMinioService {
+  private readonly client: Minio.Client;
+  private readonly bucketName: string;
+
+  constructor(
+    @Inject('MINIO_BUCKET_NAME') bucketName: string,
+    private configService: ConfigService,
+  ) {
+    this.bucketName = bucketName;
+    // console.log('USING Minio Bucket: ', this.bucketName);
+    // console.trace();
 
     this.client = new Minio.Client({
       endPoint: this.configService.get('MINIO_ENDPOINT'),
@@ -38,7 +150,7 @@ export class MinioService {
       console.log(`${this.bucketName} created!!`);
     }
 
-    this.setPublic();
+    // this.setPublic();
   }
 
   async uploadFileToBucket(file: Express.Multer.File) {

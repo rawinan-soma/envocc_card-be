@@ -12,12 +12,13 @@ import { ConfigService } from '@nestjs/config';
     GovcardService,
     MinioService,
     { provide: 'MINIO_BUCKET_NAME', useValue: 'govcard' },
-    {
-      provide: MinioService,
-      useFactory: (configService: ConfigService) =>
-        new MinioService('govcard', configService),
-      inject: [ConfigService],
-    },
+    // {
+    //   provide: MinioService,
+    //   useFactory: (configService: ConfigService) =>
+    //     new MinioService('govcard', configService),
+    //   inject: [ConfigService],
+    // },
   ],
+  exports: [GovcardService],
 })
 export class GovcardModule {}

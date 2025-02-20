@@ -48,7 +48,8 @@ export class ExperiencesController {
   @UseGuards(AdminCookieGuard)
   @Get('expsForm')
   async getExpsForm(@Req() request: AdminRequest) {
-    const institution_id = request.admin.institution;
+    const admin = JSON.parse(JSON.stringify(request.user));
+    const institution_id = admin.institution;
 
     return await this.experiencesService.getAllExpByInstitution(institution_id);
   }

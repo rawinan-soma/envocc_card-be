@@ -6,8 +6,8 @@ volumes:
   envcard-mysql-data:
   envcard-mysql-log:
   minio_data:
-  redis-data:
-  portainer_data:
+  # redis-data:
+  # portainer_data:
 services:
   # TODO: Link volume ของไฟล์ Assets ทุกตัวก่อน Prod
   envcard-mysql:
@@ -128,24 +128,24 @@ services:
     networks:
       - envcard-network
 
-  redis-ui:
-    image: redis/redisinsight:latest
-    container_name: redis-ui
-    depends_on:
-      - redis
-    ports:
-      - '5540:5540'
-    volumes:
-      - redis-data:/data
+  # redis-ui:
+  #   image: redis/redisinsight:latest
+  #   container_name: redis-ui
+  #   depends_on:
+  #     - redis
+  #   ports:
+  #     - '5540:5540'
+  #   volumes:
+  #     - redis-data:/data
 
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    restart: always
-    ports:
-      - '8800:8800'
-      - '9002:9002'
-      - '9443:9443'
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+  # portainer:
+  #   image: portainer/portainer-ce:latest
+  #   container_name: portainer
+  #   restart: always
+  #   ports:
+  #     - '8800:8800'
+  #     - '9002:9002'
+  #     - '9443:9443'
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - portainer_data:/data

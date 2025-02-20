@@ -38,9 +38,9 @@ export class UsersService {
     try {
       let filtered: number[];
       if (queryData.status === 'ongoing') {
-        filtered = [0, 1, 2, 3, 4, 5, 6, 7];
+        filtered = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
       } else if (queryData.status === 'activated') {
-        filtered = [8, 9, 10, 11, 12, 13, 14, 15];
+        filtered = [15];
       } else if (queryData.status === 'suspended') {
         filtered = [16];
       } else {
@@ -48,7 +48,7 @@ export class UsersService {
       }
 
       const adminLevelFilter: Prisma.usersWhereInput = {
-        // requests: { some: { request_status: { in: filtered } } },
+        // requests: { none: { request_status:  } } },
         OR: [
           { fname_th: { startsWith: queryData.fname_th } },
           { lname_th: { contains: queryData.lname_th } },
@@ -58,6 +58,7 @@ export class UsersService {
             },
           },
         ],
+        // NOT: [{ requests: { some: { request_status: 16 } } }],
         institutions: {},
       };
 
@@ -178,6 +179,11 @@ export class UsersService {
       const user = await this.prismaService.users.findUnique({
         where: { user_id: user_id },
         include: {
+          members: {
+            orderBy: { create_date: 'desc' },
+            select: { start_date: true, end_date: true, member_no: true },
+            take: 1,
+          },
           epositions: true,
           positions: {
             select: {
@@ -190,13 +196,13 @@ export class UsersService {
             select: {
               institution_name_th: true,
               institution_name_eng: true,
-              seals: { select: { seal_pix: true } },
+              seals: { select: { url: true } },
               sign_persons: {
                 select: {
                   sign_person_pname: true,
                   sign_person_name: true,
                   sign_person_lname: true,
-                  signature_pix: true,
+                  url: true,
                   position: true,
                 },
               },
@@ -223,7 +229,7 @@ export class UsersService {
           },
           photos: {
             select: {
-              photo: true,
+              url: true,
             },
           },
         },
@@ -353,6 +359,7 @@ export class UsersService {
       // return { user, exp };
       return await this.prismaService.users.create({
         data: {
+          e_learning: 1,
           experiences: { createMany: { data: exp } },
           requests: { create: { request_status: 0, request_type: 1 } },
           ...user,

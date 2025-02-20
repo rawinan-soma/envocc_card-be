@@ -18,9 +18,9 @@ export class GovcardService {
     private readonly prismaService: PrismaService,
     private readonly minio: MinioService,
   ) {
-    console.log(
-      `Injected MinioService in GovCardService: ${minio['bucketName']}`,
-    );
+    // console.log(
+    //   `Injected MinioService in GovCardService: ${minio['bucketName']}`,
+    // );
   }
 
   async transactionCreateGovCard(

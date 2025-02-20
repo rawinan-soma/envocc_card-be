@@ -1,7 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-
 import { UsersService } from 'src/users/users.service';
-import { serviceErrorHandler } from 'src/common/services.error.handler';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -10,11 +8,19 @@ export class UserAuthService {
   public async getAuthenticatedUser(username: string, password: string) {
     try {
       const user = await this.users.getUserByUsername(username);
+
+      await this.checkUserValidation(user);
       await this.verifyPassword(password, user.password);
 
       return user;
     } catch (error) {
-      serviceErrorHandler(error);
+      console.log(error);
+    }
+  }
+
+  private async checkUserValidation(user: any) {
+    if (user.is_validate === false) {
+      throw new UnauthorizedException('User did not validate by Admin');
     }
   }
 

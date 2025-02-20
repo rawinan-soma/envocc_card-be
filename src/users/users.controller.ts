@@ -18,6 +18,7 @@ import { CreateMainDto } from './dto/create-main.dto';
 import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import AdminRequest from 'src/admin-auth/admin-request.interface';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
+import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -35,10 +36,7 @@ export class UsersController {
     @Query('lname_th') lname_th?: string,
     @Query('institution_name') institution_name?: string,
   ) {
-    console.log('START REQUEST');
     const admin = JSON.parse(JSON.stringify(request.user));
-    console.log('REQUEST SESSION_ID GET /USER: ', request.sessionID);
-    console.log('FROM GET USER: ', request.user);
 
     const pageNumber =
       page == '0' || !page || page.match(/[a-zA-Z]/) ? 1 : parseInt(page, 10);
@@ -59,7 +57,7 @@ export class UsersController {
     });
   }
 
-  @UseGuards(UserCookieGuard)
+  @UseGuards(CookieAuthGuard)
   @Get('printForm/:user_id')
   async getPrintUser(@Param('user_id') user_id: number) {
     return this.usersService.getPrintUser(user_id);
