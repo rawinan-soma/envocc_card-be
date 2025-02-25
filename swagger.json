@@ -1,0 +1,1639 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/redis": {
+      "get": {
+        "operationId": "HealthController_checkRedisConnection",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_getUsers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fname_th",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lname_th",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "institution_name",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "operationId": "UsersController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMainDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/printForm/{user_id}": {
+      "get": {
+        "operationId": "UsersController_getPrintUser",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/printExp/{user_id}": {
+      "get": {
+        "operationId": "UsersController_getPrintExp",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/{username}": {
+      "patch": {
+        "operationId": "UsersController_UpdateUserDto",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/validate/{user_id}": {
+      "patch": {
+        "operationId": "UsersController_transactionValidateUser",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "delete": {
+        "operationId": "UsersController_deleteUserRequest",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/experiences/{exp_id}": {
+      "patch": {
+        "operationId": "ExperiencesController_updateExps",
+        "parameters": [
+          {
+            "name": "exp_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ExperiencesController_deleteExps",
+        "parameters": [
+          {
+            "name": "exp_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/experiences/expsForm": {
+      "get": {
+        "operationId": "ExperiencesController_getExpsForm",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/requests/users/{user_id}": {
+      "get": {
+        "operationId": "RequestsController_getCurrentStatus",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/requests/update": {
+      "post": {
+        "operationId": "RequestsController_updateStatus",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStatusDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admins": {
+      "get": {
+        "operationId": "AdminsController_getAdmin",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "AdminsController_createAdmin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admins/{username}": {
+      "patch": {
+        "operationId": "AdminsController_UpdateUserDto",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "AdminsController_deleteUser",
+        "parameters": [
+          {
+            "name": "username",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members": {
+      "get": {
+        "operationId": "MembersController_getAllMembers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "operationId": "MembersController_createMember",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/{member_no}": {
+      "get": {
+        "operationId": "MembersController_getMember",
+        "parameters": [
+          {
+            "name": "member_no",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/members/users/{user_id}/deactivation": {
+      "patch": {
+        "operationId": "MembersController_deactivateMember",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/qrpassword/{user_id}": {
+      "patch": {
+        "operationId": "MembersController_setQRPassword",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/qrcode/{qrcode_no}": {
+      "get": {
+        "operationId": "MembersController_getByQRCode",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/members/qrcode/{qrcode_no}/validate": {
+      "post": {
+        "operationId": "MembersController_validateQrCode",
+        "parameters": [
+          {
+            "name": "qrcode_no",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/members/startDate/{user_id}": {
+      "patch": {
+        "operationId": "MembersController_updateStartDate",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/envcard": {
+      "post": {
+        "operationId": "EnvcardController_uploadEnvCardFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/envcard/{user_id}": {
+      "get": {
+        "operationId": "EnvcardController_getEnvCard",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "EnvcardController_deleteEnvCard",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/documents": {
+      "post": {
+        "operationId": "DocumentsController_insertDocument",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "operationId": "DocumentsController_getAllDocuments",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/documents/{doc_id}": {
+      "get": {
+        "operationId": "DocumentsController_getOneDocument",
+        "parameters": [
+          {
+            "name": "doc_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DocumentsController_deleteDocument",
+        "parameters": [
+          {
+            "name": "doc_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/expFiles": {
+      "post": {
+        "operationId": "ExpfileController_uploadEnvCardFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/expFiles/{user}": {
+      "get": {
+        "operationId": "ExpfileController_getEnvCard",
+        "parameters": [
+          {
+            "name": "user",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ExpfileController_deleteEnvCard",
+        "parameters": [
+          {
+            "name": "user",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/ministries": {
+      "get": {
+        "operationId": "MinistriesController_getMinistries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/departments": {
+      "get": {
+        "operationId": "DepartmentsController_getOneDepartment",
+        "parameters": [
+          {
+            "name": "ministry",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/institutions": {
+      "get": {
+        "operationId": "InstitutionsController_getManyInstitution",
+        "parameters": [
+          {
+            "name": "institution_name_th",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/institutions/{institution_id}": {
+      "get": {
+        "operationId": "InstitutionsController_getOneInstitution",
+        "parameters": [
+          {
+            "name": "institution_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/expsFile": {
+      "post": {
+        "operationId": "ExpsfileController_uploadExpsFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/expsFile/{experiences_file_id}": {
+      "delete": {
+        "operationId": "ExpsfileController_deleteExpsFile",
+        "parameters": [
+          {
+            "name": "experiences_file_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/govCards": {
+      "post": {
+        "operationId": "GovcardController_uploadGovCardFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/govCards/{user}": {
+      "get": {
+        "operationId": "GovcardController_getGovCard",
+        "parameters": [
+          {
+            "name": "user",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "GovcardController_deleteGovCard",
+        "parameters": [
+          {
+            "name": "user",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/photos": {
+      "post": {
+        "operationId": "PhotosController_insertPhoto",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/photos/{user_id}": {
+      "get": {
+        "operationId": "PhotosController_getPhotoByUser",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "PhotosController_deletePhoto",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/positions": {
+      "get": {
+        "operationId": "PositionsController_getAllPositions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/positions/{position_id}": {
+      "get": {
+        "operationId": "PositionsController_getOnePosition",
+        "parameters": [
+          {
+            "name": "position_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/position-lvls": {
+      "get": {
+        "operationId": "PositionLvlsController_getAllLevels",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/position-lvls/{level_id}": {
+      "get": {
+        "operationId": "PositionLvlsController_getOneLevel",
+        "parameters": [
+          {
+            "name": "level_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/sign-person": {
+      "get": {
+        "operationId": "SignPersonController_getAllSignPerson",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "operationId": "SignPersonController_addSignPerson",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSignPersonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/files/upload": {
+      "post": {
+        "operationId": "FilesController_transactionUploadFilesAndRequestUpdate",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/request-file": {
+      "post": {
+        "operationId": "RequestFileController_createReqFile",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/request-file/{user_id}": {
+      "get": {
+        "operationId": "RequestFileController_getReqFile",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "RequestFileController_deleteReqFile",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/user-auth/login": {
+      "post": {
+        "operationId": "UserAuthController_logIn",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-auth": {
+      "get": {
+        "operationId": "UserAuthController_authentication",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-auth/logout": {
+      "post": {
+        "operationId": "UserAuthController_logOut",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/admin-auth/login": {
+      "post": {
+        "operationId": "AdminAuthController_logIn",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-auth": {
+      "get": {
+        "operationId": "AdminAuthController_authentication",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-auth/logout": {
+      "post": {
+        "operationId": "AdminAuthController_logOut",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/seals": {
+      "post": {
+        "operationId": "SealsController_insertSeal",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "ENVOCC CARD",
+    "description": "Example.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "pname_th": {
+            "type": "string",
+            "enum": [
+              "นาย",
+              "นาง",
+              "นางสาว",
+              "อื่นๆ"
+            ]
+          },
+          "pname_other_th": {
+            "type": "string"
+          },
+          "fname_th": {
+            "type": "string"
+          },
+          "lname_th": {
+            "type": "string"
+          },
+          "pname_en": {
+            "type": "string",
+            "enum": [
+              "Mr.",
+              "Ms.",
+              "Mrs.",
+              "Other"
+            ]
+          },
+          "pname_other_en": {
+            "type": "string"
+          },
+          "fname_en": {
+            "type": "string"
+          },
+          "lname_en": {
+            "type": "string"
+          },
+          "birthday": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "blood": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "AB",
+              "O"
+            ]
+          },
+          "work_number": {
+            "type": "string"
+          },
+          "private_number": {
+            "type": "string",
+            "pattern": "/^0[0-9]{9}$/"
+          },
+          "email": {
+            "type": "string"
+          },
+          "house_number1": {
+            "type": "string"
+          },
+          "moo1": {
+            "type": "number",
+            "nullable": true
+          },
+          "alley1": {
+            "type": "string",
+            "nullable": true
+          },
+          "road1": {
+            "type": "string",
+            "nullable": true
+          },
+          "province1": {
+            "type": "number"
+          },
+          "amphures1": {
+            "type": "number"
+          },
+          "district1": {
+            "type": "number"
+          },
+          "zip_code1": {
+            "type": "number"
+          },
+          "house_number2": {
+            "type": "string"
+          },
+          "moo2": {
+            "type": "number",
+            "nullable": true
+          },
+          "alley2": {
+            "type": "string",
+            "nullable": true
+          },
+          "road2": {
+            "type": "string",
+            "nullable": true
+          },
+          "province2": {
+            "type": "number"
+          },
+          "amphures2": {
+            "type": "number"
+          },
+          "district2": {
+            "type": "number"
+          },
+          "zip_code2": {
+            "type": "number"
+          },
+          "institution": {
+            "type": "number"
+          },
+          "eposition": {
+            "type": "number"
+          },
+          "position": {
+            "type": "number"
+          },
+          "position_lv": {
+            "type": "number"
+          },
+          "e_learning": {
+            "type": "number"
+          },
+          "approve": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "pname_th",
+          "pname_other_th",
+          "fname_th",
+          "lname_th",
+          "pname_en",
+          "pname_other_en",
+          "fname_en",
+          "lname_en",
+          "birthday",
+          "nationality",
+          "blood",
+          "work_number",
+          "private_number",
+          "email",
+          "house_number1",
+          "province1",
+          "amphures1",
+          "district1",
+          "zip_code1",
+          "house_number2",
+          "province2",
+          "amphures2",
+          "district2",
+          "zip_code2",
+          "institution",
+          "eposition",
+          "position",
+          "position_lv",
+          "e_learning",
+          "approve"
+        ]
+      },
+      "CreateExperienceDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "number"
+          },
+          "exp_fdate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "exp_ldate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "exp_typeoffice": {
+            "type": "number"
+          },
+          "exp_office": {
+            "type": "string"
+          },
+          "exp_position": {
+            "type": "string"
+          },
+          "exp_work": {
+            "type": "string"
+          },
+          "exp_years": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "exp_fdate",
+          "exp_ldate",
+          "exp_typeoffice",
+          "exp_office",
+          "exp_position",
+          "exp_work"
+        ]
+      },
+      "CreateMainDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/CreateUserDto"
+          },
+          "experiences": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateExperienceDto"
+            }
+          }
+        },
+        "required": [
+          "user",
+          "experiences"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateStatusDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "number"
+          },
+          "current_status": {
+            "type": "number"
+          },
+          "next_status": {
+            "type": "number"
+          },
+          "request_type": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user",
+          "current_status",
+          "next_status",
+          "request_type"
+        ]
+      },
+      "CreateAdminDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "institution": {
+            "type": "number"
+          },
+          "admin_level": {
+            "type": "number"
+          },
+          "pname": {
+            "type": "string",
+            "enum": [
+              "นาย",
+              "นาง",
+              "นางสาว",
+              "อื่นๆ"
+            ]
+          },
+          "fname": {
+            "type": "string"
+          },
+          "lname": {
+            "type": "string"
+          },
+          "private_number": {
+            "type": "string",
+            "pattern": "/^0[0-9]{9}$/"
+          },
+          "work_number": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "position": {
+            "type": "number"
+          },
+          "position_lv": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "username",
+          "password",
+          "institution",
+          "admin_level",
+          "pname",
+          "fname",
+          "lname",
+          "private_number",
+          "work_number",
+          "email",
+          "position",
+          "position_lv"
+        ]
+      },
+      "UpdateAdminDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateMemberDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "number"
+          },
+          "signer": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "user",
+          "signer"
+        ]
+      },
+      "CreateDocumentDto": {
+        "type": "object",
+        "properties": {
+          "doc_type": {
+            "type": "number"
+          },
+          "doc_name": {
+            "type": "string"
+          },
+          "doc_file": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "doc_type",
+          "doc_name",
+          "doc_file",
+          "url"
+        ]
+      },
+      "CreateSignPersonDto": {
+        "type": "object",
+        "properties": {
+          "sign_person_pname": {
+            "type": "string"
+          },
+          "sign_person_name": {
+            "type": "string"
+          },
+          "sign_person_lname": {
+            "type": "string"
+          },
+          "signature_pix": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "update_admin": {
+            "type": "number"
+          },
+          "institution": {
+            "type": "number"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "sign_person_pname",
+          "sign_person_name",
+          "sign_person_lname",
+          "position",
+          "institution"
+        ]
+      }
+    }
+  }
+}

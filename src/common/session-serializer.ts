@@ -19,6 +19,7 @@ export class SessionSerializer extends PassportSerializer {
       id: user.user_id || user.admin_id,
       role: user.role,
       level: user.level ? user.level : null,
+      eposition: user.eposition ? user.eposition : null,
     });
   }
 

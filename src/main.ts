@@ -10,6 +10,8 @@ import { createClient } from 'redis';
 
 import { RedisStore } from 'connect-redis';
 import * as cookieParser from 'cookie-parser';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -24,12 +26,17 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('ENVOCC CARD')
-    .setDescription('Example')
+    .setDescription(`Example.`)
     .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+
+  writeFileSync(
+    join(process.cwd(), 'swagger.json'),
+    JSON.stringify(document, null, 2),
+  );
 
   const configService = app.get(ConfigService);
 

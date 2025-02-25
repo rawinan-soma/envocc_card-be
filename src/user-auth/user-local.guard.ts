@@ -9,7 +9,7 @@ export class UserLocalGuard extends AuthGuard('user') {
     const request = context.switchToHttp().getRequest();
     await super.logIn(request);
 
-    console.log('ATTEMP LOGIN BY USER: ', request.user);
+    console.log('ATTEMP LOGIN BY USER');
 
     return true;
   }

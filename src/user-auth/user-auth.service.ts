@@ -9,12 +9,14 @@ export class UserAuthService {
     try {
       const user = await this.users.getUserByUsername(username);
 
-      await this.checkUserValidation(user);
       await this.verifyPassword(password, user.password);
+      await this.checkUserValidation(user);
 
       return user;
     } catch (error) {
       console.log(error);
+      // FIXME:
+      throw error;
     }
   }
 

@@ -51,6 +51,10 @@ export class PhotosController {
   @UseGuards(AdminCookieGuard)
   @Get(':user_id')
   async getPhotoByUser(@Param('user_id', ParseIntPipe) user_id: number) {
+    // const file = await this.photosService.getPhotoByUser(user_id);
+    // const fileName = file.photo;
+    // return await this.minio.getPresignedUrl(fileName, 60);
+    console.log((await this.photosService.getPhotoByUser(user_id)).url);
     return (await this.photosService.getPhotoByUser(user_id)).url;
   }
 

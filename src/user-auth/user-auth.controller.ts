@@ -32,7 +32,7 @@ export class UserAuthController {
   @Get()
   async authentication(@Req() request: UserRequest) {
     console.log('LOGIN SESSION_ID FROM USER_AUTH: ', request.sessionID);
-    console.log('GET USER-AUTH: ', request.user);
+    // console.log('GET USER-AUTH: ', request.user);
     console.log('end USER-AUTH');
     return request.session;
   }

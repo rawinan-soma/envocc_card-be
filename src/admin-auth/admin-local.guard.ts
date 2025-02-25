@@ -9,7 +9,7 @@ export class AdminLocalGuard extends AuthGuard('admin') {
     const request = context.switchToHttp().getRequest();
     await super.logIn(request);
 
-    console.log('ATTEMP LOGIN BY ADMIN: ', request.user);
+    console.log('ATTEMP LOGIN BY ADMIN');
 
     return true;
   }
