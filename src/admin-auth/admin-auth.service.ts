@@ -5,12 +5,12 @@ import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AdminAuthService {
-  constructor(private readonly admins: AdminsService) {}
+  constructor(private readonly admins: AdminsService) { }
 
   public async getAuthenticatedAdmin(username: string, password: string) {
     try {
       const admin = await this.admins.getAdminByUsername(username);
-      this.checkUserValidation(admin);
+      // this.checkUserValidation(admin);
       await this.verifyPassword(password, admin.password);
 
       return admin;

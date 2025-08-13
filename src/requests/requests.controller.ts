@@ -17,6 +17,7 @@ import { AdminCookieGuard } from 'src/admin-auth/admin-cookie.guard';
 import AdminRequest from 'src/admin-auth/admin-request.interface';
 import { UserCookieGuard } from 'src/user-auth/user-cookie.guard';
 import { CookieAuthGuard } from 'src/common/cookie-auth.guard';
+import { CreateNewRequestDto } from "./dto/create-new-request.dto";
 
 @Controller('requests')
 export class RequestsController {
