@@ -36,7 +36,7 @@ export class RequestsController {
 
   // @UseGuards(UserCookieGuard)
   // @UseGuards(AdminCookieGuard)
-  @UseGuards(CookieAuthGuard)
+  // @UseGuards(CookieAuthGuard)
   @Post('update')
   async updateStatus(
     @Req() request: AdminRequest,

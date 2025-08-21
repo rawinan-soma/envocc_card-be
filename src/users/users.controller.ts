@@ -57,7 +57,7 @@ export class UsersController {
     });
   }
 
-  @UseGuards(CookieAuthGuard)
+  // @UseGuards(CookieAuthGuard)
   @Get('printForm/:user_id')
   async getPrintUser(@Param('user_id') user_id: number) {
     return this.usersService.getPrintUser(user_id);

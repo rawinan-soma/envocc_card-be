@@ -240,7 +240,7 @@ export class UsersService {
           position_lv: true,
         },
       });
-
+      console.log(user);
       return user;
     } catch (error: any) {
       this.logger.error('ERROR: getPrintUser');
